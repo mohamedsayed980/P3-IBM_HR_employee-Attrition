@@ -9,7 +9,7 @@
 #
 # Run with:  streamlit run ML_Engine_Dashboard.py
 # =============================================================================
-## path = streamlit run "E:\FINAL PROJECTS\P3-IBM_HR_employee Attrition\EDA_Dashboard.py"
+## path = streamlit run "E:\FINAL PROJECTS\P4_Superstore (2015-2018)\EDA_Dashboard.py"
 # ================================================================#
 # =============================================================================
 # A — IMPORTS
