@@ -4,7 +4,7 @@
 #  Author : Mohamed · M3
 # ─────────────────────────────────────────────
 # =============================================================================
-## path = streamlit run "E:\FINAL PROJECTS\P3-IBM_HR_employee Attrition\Home.py"
+## path = streamlit run "E:\FINAL PROJECTS\P4_Superstore (2015-2018)\Home.py"
 # ================================================================#
 
 import streamlit as st
