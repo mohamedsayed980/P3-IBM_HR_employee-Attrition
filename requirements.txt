@@ -9,4 +9,6 @@ scipy
 statsmodels 
 psutil 
 openpyxl
+fpdf2
+python-docx
 reportlab
