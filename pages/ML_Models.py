@@ -647,7 +647,7 @@ def _no_data_msg():
 # =============================================================================
 with tab9:
     st.markdown("## 📉 Regression Models")
-    if st.session_state.df_rawis None:
+    if st.session_state.df_raw is None:
         _no_data_msg()
         st.stop()
 
@@ -916,7 +916,7 @@ with tab9:
 # =============================================================================
 with tab10:
     st.markdown("## 🎯 Classification Models")
-    if st.session_state.df_rawis None:
+    if st.session_state.df_raw is None:
         _no_data_msg()
         st.stop()
 
@@ -1531,7 +1531,7 @@ with tab12:
         section("🎯 Single-Row Prediction")
         feat_names = S["feat_names"]
 
-        if st.session_state.df_rawis not None and feat_names:
+        if st.session_state.df_raw is not None and feat_names:
             ref_df = df_global[feat_names].describe()
 
             with st.expander("📝 Enter feature values", expanded=True):
