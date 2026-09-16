@@ -8,4 +8,5 @@ scikit-learn
 scipy 
 statsmodels 
 psutil 
-openpyxl 
+openpyxl
+reportlab
