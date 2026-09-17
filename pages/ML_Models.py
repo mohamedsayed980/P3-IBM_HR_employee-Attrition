@@ -78,7 +78,35 @@ try:
     DOCX_OK = True
 except ImportError:
     DOCX_OK = False
+#------------------------------------------------------------------------------
+# ── Initialize ALL session state keys ─────────────
+_defaults = {
+    "corr_threshold": 0.30,
+    "df_raw":         None,
+    "df_work":        None,
+    "target_col":     None,
+    "num_cols":       [],
+    "cat_cols":       [],
+    "file_name":      "",
+    "data_prepared_c": False,
+    "feat_names":     [],
+}
+for _k, _v in _defaults.items():
+    if _k not in st.session_state:
+        st.session_state[_k] = _v
 
+
+# Add these to your init_state() function or
+# at the top of the file after imports:
+
+if "price_bins" not in st.session_state:
+    st.session_state.price_bins = [0, 300000, 500000, 750000, float('inf')]
+if "price_labels" not in st.session_state:
+    st.session_state.price_labels = ["Budget","Mid","Premium","Luxury"]
+if "feat_names" not in st.session_state:
+    st.session_state.feat_names = []
+if "data_prepared_c" not in st.session_state:
+    st.session_state.data_prepared_c = False
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -114,34 +142,7 @@ CLR = {
 # ─────────────────────────────────────────────────────────────────────────────
 # C  SESSION STATE INITIALISATION
 # ─────────────────────────────────────────────────────────────────────────────
-# ── Initialize ALL session state keys ─────────────
-_defaults = {
-    "corr_threshold": 0.30,
-    "df_raw":         None,
-    "df_work":        None,
-    "target_col":     None,
-    "num_cols":       [],
-    "cat_cols":       [],
-    "file_name":      "",
-    "data_prepared_c": False,
-    "feat_names":     [],
-}
-for _k, _v in _defaults.items():
-    if _k not in st.session_state:
-        st.session_state[_k] = _v
 
-
-# Add these to your init_state() function or
-# at the top of the file after imports:
-
-if "price_bins" not in st.session_state:
-    st.session_state.price_bins = [0, 300000, 500000, 750000, float('inf')]
-if "price_labels" not in st.session_state:
-    st.session_state.price_labels = ["Budget","Mid","Premium","Luxury"]
-if "feat_names" not in st.session_state:
-    st.session_state.feat_names = []
-if "data_prepared_c" not in st.session_state:
-    st.session_state.data_prepared_c = False
 
 def init_state():
     defaults = {
