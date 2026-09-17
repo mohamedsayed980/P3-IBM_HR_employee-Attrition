@@ -151,7 +151,7 @@ st.markdown("""
 
 import pathlib
 _root  = pathlib.Path(__file__).parent.parent
-_full  = _root / "data" / "hr_attrition_clean"   
+_full  = _root / "data" / "hr_attrition_clean.csv"   
 
 @st.cache_data
 def _load_auto():
@@ -173,7 +173,7 @@ with st.container():
             if not _auto_df.empty:
                 st.session_state.df_raw   = _auto_df.copy()
                 st.session_state.df_work  = _auto_df.copy()
-                st.session_state.file_name = "hr_attrition_clean"
+                st.session_state.file_name = "hr_attrition_clean.csv"
                 st.session_state.num_cols  = get_numeric_cols(_auto_df)
                 st.session_state.cat_cols  = get_cat_cols(_auto_df)
                 if len(st.session_state.num_cols) == 0:
