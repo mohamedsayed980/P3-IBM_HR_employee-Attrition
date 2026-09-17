@@ -83,29 +83,8 @@ import pathlib
 LOGO = pathlib.Path(__file__).parent.parent / "M3_logo.png"
 #-----------------------------------------------------------------------------
 # =============================================================================
-# C — SESSION STATE INITIALISATION
+# C — SESSION STATE INITIALISATION >> as at top 
 # =============================================================================
-
-def init_state():
-    defaults = {
-        "df_raw"      : None,   # original loaded dataframe
-        "df_clean"    : None,   # after IQR cleaning (Tab 3)
-        "df_imputed"  : None,   # after imputation    (Tab 7)
-        "df_work"     : None,   # working copy used across tabs
-        "target_col"  : None,
-        "num_cols"    : [],
-        "cat_cols"    : [],
-        "important_vars" : [],
-        "iqr_table"   : None,   # Tab 3 outlier table
-        "insights_text": "",
-        "file_name"   : "",
-        "corr_threshold" : 0.30,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
-
-init_state()
 
 # =============================================================================
 # D — HELPER UTILITIES
