@@ -148,8 +148,8 @@ st.markdown("""
 # =============================================================================
 # F — FILE LOADER (Auto-loads split parts OR manual upload)
 # =============================================================================
+
 import pathlib
- 
 _root  = pathlib.Path(__file__).parent.parent
 _full  = _root / "data" / "hr_attrition_clean"   
 
@@ -219,7 +219,7 @@ with st.container():
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
             default_idx = cols.index("Attrition_flag") \
-                          if "is_satisfied" in cols else 0
+                          if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
             st.session_state.target_col = target
