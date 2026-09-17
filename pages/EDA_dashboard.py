@@ -48,19 +48,31 @@ from reportlab.lib.units import cm
 from docx import Document
 from docx.shared import Pt, RGBColor, Inches
 
-# =============================================================================
-# B — PAGE CONFIG & GLOBAL STYLE -----> in Home.py only 
-# =============================================================================
 # ADD LOGO TO DASHBOARD 
 import pathlib
 LOGO = pathlib.Path(__file__).parent.parent / "M3_logo.png"
-
+#-----------------------------------------------------------------------------
+# ── Initialize ALL session state keys ─────────────
+_defaults = {
+    "corr_threshold": 0.30,
+    "df_raw":         None,
+    "df_work":        None,
+    "target_col":     None,
+    "num_cols":       [],
+    "cat_cols":       [],
+    "file_name":      "",
+    "data_prepared_c": False,
+    "feat_names":     [],
+}
+for _k, _v in _defaults.items():
+    if _k not in st.session_state:
+        st.session_state[_k] = _v
 # =============================================================================
 # C — SESSION STATE INITIALISATION
 # =============================================================================
+
 # Add these to your init_state() function or
 # at the top of the file after imports:
-
 if "price_bins" not in st.session_state:
     st.session_state.price_bins = [0, 300000, 500000, 750000, float('inf')]
 if "price_labels" not in st.session_state:
@@ -218,7 +230,7 @@ with st.container():
     with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("Attrition_flag") \
+            default_idx = cols.index("Attrition") \
                           if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
