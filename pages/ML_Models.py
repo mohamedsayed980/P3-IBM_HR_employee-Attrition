@@ -81,8 +81,7 @@ except ImportError:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# B  PAGE CONFIG & GLOBAL STYLE------>> in  Home.py  only 
-# ─────────────────────────────────────────────────────────────────────────────
+
 # ADD LOGO TO DASHBOARD 
 import pathlib
 LOGO = pathlib.Path(__file__).parent.parent / "3M_logo.png" 
@@ -115,6 +114,23 @@ CLR = {
 # ─────────────────────────────────────────────────────────────────────────────
 # C  SESSION STATE INITIALISATION
 # ─────────────────────────────────────────────────────────────────────────────
+# ── Initialize ALL session state keys ─────────────
+_defaults = {
+    "corr_threshold": 0.30,
+    "df_raw":         None,
+    "df_work":        None,
+    "target_col":     None,
+    "num_cols":       [],
+    "cat_cols":       [],
+    "file_name":      "",
+    "data_prepared_c": False,
+    "feat_names":     [],
+}
+for _k, _v in _defaults.items():
+    if _k not in st.session_state:
+        st.session_state[_k] = _v
+
+
 # Add these to your init_state() function or
 # at the top of the file after imports:
 
@@ -510,7 +526,7 @@ def acc_colour(v: float) -> str:
 import pathlib
  
 _root  = pathlib.Path(__file__).parent.parent
-_full  = _root / "data" / "hr_attrition_clean"   
+_full  = _root / "data" / "hr_attrition_clean.csv"   
 
 @st.cache_data
 def _load_auto():
@@ -532,7 +548,7 @@ with st.container():
             if not _auto_df.empty:
                 st.session_state.df_raw   = _auto_df.copy()
                 st.session_state.df_work  = _auto_df.copy()
-                st.session_state.file_name = "hr_attrition_clean"
+                st.session_state.file_name = "hr_attrition_clean.csv"
                 st.session_state.num_cols  = get_numeric_cols(_auto_df)
                 st.session_state.cat_cols  = get_cat_cols(_auto_df)
                 if len(st.session_state.num_cols) == 0:
@@ -577,7 +593,7 @@ with st.container():
     with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("Attrition_flag") \
+            default_idx = cols.index("Attrition") \
                           if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
