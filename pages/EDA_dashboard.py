@@ -47,11 +47,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from docx import Document
 from docx.shared import Pt, RGBColor, Inches
-
-# ADD LOGO TO DASHBOARD 
-import pathlib
-LOGO = pathlib.Path(__file__).parent.parent / "M3_logo.png"
-#-----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 # ── Initialize ALL session state keys ─────────────
 _defaults = {
     "corr_threshold": 0.30,
@@ -67,10 +63,6 @@ _defaults = {
 for _k, _v in _defaults.items():
     if _k not in st.session_state:
         st.session_state[_k] = _v
-# =============================================================================
-# C — SESSION STATE INITIALISATION
-# =============================================================================
-
 # Add these to your init_state() function or
 # at the top of the file after imports:
 if "price_bins" not in st.session_state:
@@ -81,6 +73,16 @@ if "feat_names" not in st.session_state:
     st.session_state.feat_names = []
 if "data_prepared_c" not in st.session_state:
     st.session_state.data_prepared_c = False
+
+#--------------------------------------------------------------------------
+# ADD LOGO TO DASHBOARD 
+import pathlib
+LOGO = pathlib.Path(__file__).parent.parent / "M3_logo.png"
+#-----------------------------------------------------------------------------
+
+# =============================================================================
+# C — SESSION STATE INITIALISATION
+# =============================================================================
 
 def init_state():
     defaults = {
