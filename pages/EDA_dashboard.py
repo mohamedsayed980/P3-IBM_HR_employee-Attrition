@@ -4,9 +4,6 @@
 # Mirrors MATLAB ML_Engine.mlapp — Tabs 1 → 6
 # Adds NEW: Tab 7 (Missing Values & Imputation) + Tab 8 (Multicollinearity VIF)
 #
-# Compatible with: ML_Engine_Step2_Outliers_Report.py  (Part 1 backend)
-# Dataset tested:  kc_house_data.csv  (King County House Prices)
-#
 # Run with:  streamlit run ML_Engine_Dashboard.py
 # =============================================================================
 ## path = streamlit run "G:\FINAL_PROJECTS\P3-IBM_HR_employee Attrition\EDA_Dashboard.py"
