@@ -474,13 +474,13 @@ def acc_colour(v: float) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # E  SIDEBAR — DATA LOADER
 # ─────────────────────────────────────────────────────────────────────────────
- # =============================================================================
+# =============================================================================
 # F — FILE LOADER (Auto-loads split parts OR manual upload)
 # =============================================================================
 import pathlib
  
 _root  = pathlib.Path(__file__).parent.parent
-_full  = _root / "data" / "hr_attrition_clean.csv"   
+_full  = _root / "data" / "hr_attrition_clean"   
 
 @st.cache_data
 def _load_auto():
@@ -502,7 +502,7 @@ with st.container():
             if not _auto_df.empty:
                 st.session_state.df_raw   = _auto_df.copy()
                 st.session_state.df_work  = _auto_df.copy()
-                st.session_state.file_name = "hr_attrition_clean.csv"
+                st.session_state.file_name = "hr_attrition_clean"
                 st.session_state.num_cols  = get_numeric_cols(_auto_df)
                 st.session_state.cat_cols  = get_cat_cols(_auto_df)
                 if len(st.session_state.num_cols) == 0:
@@ -547,8 +547,8 @@ with st.container():
     with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("attrition") \
-                          if "attrition_flag" in cols else 0
+            default_idx = cols.index("Monthly_income") \
+                          if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
             st.session_state.target_col = target
