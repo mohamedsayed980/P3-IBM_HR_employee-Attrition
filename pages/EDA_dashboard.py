@@ -154,6 +154,9 @@ def _load_auto():
     if _full.exists():
         return pd.read_csv(_full)
     return pd.DataFrame()
+# ← ADD THIS DEBUG LINE temporarily:
+st.sidebar.write(f"Looking for: {_full}")
+st.sidebar.write(f"Exists: {_full.exists()}")
  
 with st.sidebar:
     st.image(str(LOGO), width=70)
