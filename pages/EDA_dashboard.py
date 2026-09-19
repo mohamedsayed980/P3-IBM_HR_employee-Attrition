@@ -71,8 +71,6 @@ for _k, _v in _defaults.items():
     if _k not in st.session_state:
         st.session_state[_k] = _v
       
-        
-
 # Add these to your init_state() function or
 # at the top of the file after imports:
 if "price_bins" not in st.session_state:
@@ -141,7 +139,6 @@ st.markdown("""
 # F — FILE LOADER (Auto-loads split parts OR manual upload)
 # =============================================================================
 import pathlib
- 
 _root  = pathlib.Path(__file__).parent.parent
 _full  = _root / "data" / "hr_attrition_clean"   
 
@@ -210,7 +207,7 @@ with st.container():
     with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("Monthlyincome") \
+            default_idx = cols.index("Monthly_income") \
                           if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
