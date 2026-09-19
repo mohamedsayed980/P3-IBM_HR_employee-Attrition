@@ -47,8 +47,7 @@ def init_state():
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
-
-init_state()
+            init_state()
 #--------------------------------------
 import pandas as pd
 import numpy as np
