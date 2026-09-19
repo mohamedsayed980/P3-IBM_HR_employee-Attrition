@@ -155,12 +155,12 @@ def _load_auto():
         return pd.read_csv(_full)
     return pd.DataFrame()
  
-with st.sidebar:
-    st.image(str(LOGO), width=70)
-    st.markdown("---")
+   with st.sidebar:
+           st.image(str(LOGO), width=70)
+           st.markdown("---")
  
-with st.container():
-    col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
+    with st.container():
+            col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
  
     with col_load:
         # ── Try auto-load first ──────────────────────────────
