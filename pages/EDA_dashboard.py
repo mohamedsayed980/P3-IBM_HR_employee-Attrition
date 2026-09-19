@@ -29,6 +29,7 @@ if "feat_names" not in st.session_state:
     st.session_state.feat_names = []
 if "data_prepared_c" not in st.session_state:
     st.session_state.data_prepared_c = False
+    
 def init_state():
     defaults = {
         "df_raw"      : None,   # original loaded dataframe
