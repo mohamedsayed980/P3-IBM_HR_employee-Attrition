@@ -55,7 +55,27 @@ if "price_bins" not in st.session_state:
     st.session_state["price_bins"] = [0,300000,500000,750000,float('inf')]
 if "price_labels" not in st.session_state:
     st.session_state["price_labels"] = ["Budget","Mid","Premium","Luxury"]
+#----------------------------------------------------------------------------
+def init_state():
+    defaults = {
+        "df_raw"      : None,   # original loaded dataframe
+        "df_clean"    : None,   # after IQR cleaning (Tab 3)
+        "df_imputed"  : None,   # after imputation    (Tab 7)
+        "df_work"     : None,   # working copy used across tabs
+        "target_col"  : None,
+        "num_cols"    : [],
+        "cat_cols"    : [],
+        "important_vars" : [],
+        "iqr_table"   : None,   # Tab 3 outlier table
+        "insights_text": "",
+        "file_name"   : "",
+        "corr_threshold" : 0.30,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
 
+init_state()
 
 # =============================================================================
 #------------------------------------------------------------------------------
@@ -145,27 +165,7 @@ CLR = {
     "white"     : "#ffffff",   # white
     "black"     : "#212121",   # near black
 }
-#----------------------------------------------------------------------------
-def init_state():
-    defaults = {
-        "df_raw"      : None,   # original loaded dataframe
-        "df_clean"    : None,   # after IQR cleaning (Tab 3)
-        "df_imputed"  : None,   # after imputation    (Tab 7)
-        "df_work"     : None,   # working copy used across tabs
-        "target_col"  : None,
-        "num_cols"    : [],
-        "cat_cols"    : [],
-        "important_vars" : [],
-        "iqr_table"   : None,   # Tab 3 outlier table
-        "insights_text": "",
-        "file_name"   : "",
-        "corr_threshold" : 0.30,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
 
-init_state()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # D  HELPER UTILITIES & helper function (for parallel training )
