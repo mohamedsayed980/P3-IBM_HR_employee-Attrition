@@ -139,6 +139,7 @@ st.markdown("""
 # F — FILE LOADER (Auto-loads split parts OR manual upload)
 # =============================================================================
 import pathlib
+ 
 _root  = pathlib.Path(__file__).parent.parent
 _full  = _root / "data" / "hr_attrition_clean"   
 
