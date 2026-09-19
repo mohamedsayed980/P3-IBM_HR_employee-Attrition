@@ -152,36 +152,31 @@ ORANGE = "#e65100"
 GREEN  = "#2e7d32"
 RED    = "#c62828"
 TEAL   = "#00695c"
-
-
 # =============================================================================
 # E — HEADER
 # =============================================================================
-
 st.markdown("""
 <div class="main-header">
     <h1>🔬 HR Attrition — EDA Dashboard</h1>
     <p>Exploratory Data Analysis · Attrition Drivers · Salary Patterns · HR Insights</p>
 </div>
 """, unsafe_allow_html=True)
-
 # =============================================================================
 # F — FILE LOADER (Auto-loads split parts OR manual upload)
 # =============================================================================
 import pathlib
- 
 _root  = pathlib.Path(__file__).parent.parent
 _full  = _root / "data" / "hr_attrition_clean.csv"   
-
 @st.cache_data
 def _load_auto():
     if _full.exists():
         return pd.read_csv(_full)
     return pd.DataFrame()
+#-------------------------------------------    
 # ← ADD THIS DEBUG LINE temporarily:
 st.sidebar.write(f"Looking for: {_full}")
 st.sidebar.write(f"Exists: {_full.exists()}")
- 
+#-------------------------------------------     
 with st.sidebar:
     st.image(str(LOGO), width=70)
     st.markdown("---")
