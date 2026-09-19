@@ -547,7 +547,7 @@ with st.container():
     with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("Monthly_income") \
+            default_idx = cols.index("Monthlyincome") \
                           if "Attrition_flag" in cols else 0
             target = st.selectbox("🎯 Target Variable",
                                   cols, index=default_idx)
