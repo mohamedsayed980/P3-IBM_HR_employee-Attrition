@@ -15,6 +15,41 @@
 # A1 — Core
 import streamlit as st
 #--------------------------------------
+# =============================================================================
+# C — SESSION STATE INITIALISATION
+# =============================================================================
+# Add these to your init_state() function or
+# at the top of the file after imports:
+
+if "price_bins" not in st.session_state:
+    st.session_state.price_bins = [0, 300000, 500000, 750000, float('inf')]
+if "price_labels" not in st.session_state:
+    st.session_state.price_labels = ["Budget","Mid","Premium","Luxury"]
+if "feat_names" not in st.session_state:
+    st.session_state.feat_names = []
+if "data_prepared_c" not in st.session_state:
+    st.session_state.data_prepared_c = False
+def init_state():
+
+    defaults = {
+        "df_raw"      : None,   # original loaded dataframe
+        "df_clean"    : None,   # after IQR cleaning (Tab 3)
+        "df_imputed"  : None,   # after imputation    (Tab 7)
+        "df_work"     : None,   # working copy used across tabs
+        "target_col"  : None,
+        "num_cols"    : [],
+        "cat_cols"    : [],
+        "important_vars" : [],
+        "iqr_table"   : None,   # Tab 3 outlier table
+        "insights_text": "",
+        "file_name"   : "",
+        "corr_threshold" : 0.30,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+init_state()
 #--------------------------------------
 import pandas as pd
 import numpy as np
@@ -51,41 +86,7 @@ from docx.shared import Pt, RGBColor, Inches
 import pathlib
 LOGO = pathlib.Path(__file__).parent.parent / "M3_logo.png"
 #-----------------------------------------------------------------------------
-# =============================================================================
-# C — SESSION STATE INITIALISATION
-# =============================================================================
-# Add these to your init_state() function or
-# at the top of the file after imports:
 
-if "price_bins" not in st.session_state:
-    st.session_state.price_bins = [0, 300000, 500000, 750000, float('inf')]
-if "price_labels" not in st.session_state:
-    st.session_state.price_labels = ["Budget","Mid","Premium","Luxury"]
-if "feat_names" not in st.session_state:
-    st.session_state.feat_names = []
-if "data_prepared_c" not in st.session_state:
-    st.session_state.data_prepared_c = False
-def init_state():
-
-    defaults = {
-        "df_raw"      : None,   # original loaded dataframe
-        "df_clean"    : None,   # after IQR cleaning (Tab 3)
-        "df_imputed"  : None,   # after imputation    (Tab 7)
-        "df_work"     : None,   # working copy used across tabs
-        "target_col"  : None,
-        "num_cols"    : [],
-        "cat_cols"    : [],
-        "important_vars" : [],
-        "iqr_table"   : None,   # Tab 3 outlier table
-        "insights_text": "",
-        "file_name"   : "",
-        "corr_threshold" : 0.30,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
-
-init_state()
 # =============================================================================
 # D — HELPER UTILITIES
 # =============================================================================
