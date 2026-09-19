@@ -159,11 +159,7 @@ with st.sidebar:
     st.markdown("---")
  
 with st.container():
-# Emergency init — add right before line 162
-    if "df_raw" not in st.session_state:
-        st.session_state["df_raw"] = None
-    if "corr_threshold" not in st.session_state:
-            st.session_state["corr_threshold"] = 0.30
+
     col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
  
     with col_load:
