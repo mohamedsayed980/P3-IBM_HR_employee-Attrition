@@ -46,6 +46,44 @@ if st.session_state.df_raw is None and _full.exists():
         include="object").columns.tolist()
     st.session_state.target_col = "Attrition_flag" \
         if "Attrition_flag" in _df.columns else _df.columns[0]
+# =============================================================================
+#   sidebar >>>> 
+# =============================================================================
+with st.container():
+        col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
+
+with col_load:
+            # auto-loader code ✅
+
+with col_target:    # ← THIS must exist!
+        if st.session_state.df_raw is not None:
+            cols = st.session_state.df_raw.columns.tolist()
+            default_idx = cols.index("Attrition_flag") \
+                          if "Attrition_flag" in cols else 0
+            target = st.selectbox("🎯 Target Variable",
+                                  cols, index=default_idx)
+            st.session_state.target_col = target
+
+with col_thresh:    # ← THIS must exist!
+        thresh = st.slider("Correlation Threshold",
+                           0.10, 0.90,
+                           float(st.session_state.corr_threshold),
+                           0.05)
+        st.session_state.corr_threshold = thresh
+
+with col_info:      # ← THIS must exist!
+            if st.session_state.df_raw is not None:
+            df = st.session_state.df_raw
+            st.markdown(f"""
+            <div style="background:white;border-radius:8px;
+                padding:10px 14px;font-size:0.82rem;line-height:1.8;">
+                📊 <b>Shape:</b> {df.shape[0]:,} × {df.shape[1]}<br>
+                🔢 <b>Numeric:</b> {len(st.session_state.num_cols)}
+                🔤 <b>Categorical:</b> {len(st.session_state.cat_cols)}<br>
+                ❓ <b>Missing:</b> {df.isnull().sum().sum():,} cells
+            </div>""", unsafe_allow_html=True)
+
+
 #-------------------------------------------------------------------------------
 
 import numpy as np
@@ -135,42 +173,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =============================================================================
-# F —  sidebar >>>> 
-# =============================================================================
-with st.container():
-        col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
 
-with col_load:
-            # auto-loader code ✅
-
-with col_target:    # ← THIS must exist!
-        if st.session_state.df_raw is not None:
-            cols = st.session_state.df_raw.columns.tolist()
-            default_idx = cols.index("Attrition_flag") \
-                          if "Attrition_flag" in cols else 0
-            target = st.selectbox("🎯 Target Variable",
-                                  cols, index=default_idx)
-            st.session_state.target_col = target
-
-with col_thresh:    # ← THIS must exist!
-        thresh = st.slider("Correlation Threshold",
-                           0.10, 0.90,
-                           float(st.session_state.corr_threshold),
-                           0.05)
-        st.session_state.corr_threshold = thresh
-
-with col_info:      # ← THIS must exist!
-            if st.session_state.df_raw is not None:
-            df = st.session_state.df_raw
-            st.markdown(f"""
-            <div style="background:white;border-radius:8px;
-                padding:10px 14px;font-size:0.82rem;line-height:1.8;">
-                📊 <b>Shape:</b> {df.shape[0]:,} × {df.shape[1]}<br>
-                🔢 <b>Numeric:</b> {len(st.session_state.num_cols)}
-                🔤 <b>Categorical:</b> {len(st.session_state.cat_cols)}<br>
-                ❓ <b>Missing:</b> {df.isnull().sum().sum():,} cells
-            </div>""", unsafe_allow_html=True)
 
 # =============================================================================
 # G — TABS
