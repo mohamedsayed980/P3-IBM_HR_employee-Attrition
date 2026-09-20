@@ -45,7 +45,7 @@ if st.session_state.df_raw is None and _full.exists():
     st.session_state.cat_cols  = _df.select_dtypes(
         include="object").columns.tolist()
     st.session_state.target_col = "Attrition_flag" \
-        if "Attrition" in _df.columns else _df.columns[0]
+        if "Attrition_flag" in _df.columns else _df.columns[0]
 #-------------------------------------------------------------------------------
 
 import numpy as np
