@@ -54,7 +54,6 @@ with st.container():
 
 with col_load:
             # auto-loader code ✅
-
 with col_target:    # ← THIS must exist!
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
@@ -82,10 +81,7 @@ with col_info:      # ← THIS must exist!
                 🔤 <b>Categorical:</b> {len(st.session_state.cat_cols)}<br>
                 ❓ <b>Missing:</b> {df.isnull().sum().sum():,} cells
             </div>""", unsafe_allow_html=True)
-
-
 #-------------------------------------------------------------------------------
-
 import numpy as np
 import os
 import io
