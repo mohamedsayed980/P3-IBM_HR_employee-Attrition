@@ -53,9 +53,10 @@ with st.container():
         col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
 
 with col_load:
-            # auto-loader code ✅
-with col_target:                # ← THIS must exist!
-        if st.session_state.df_raw is not None:
+    # auto-loader code ✅
+with col_target: 
+    # ← THIS must exist!
+            if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
             default_idx = cols.index("Attrition_flag") \
                           if "Attrition" in cols else 0
@@ -63,14 +64,16 @@ with col_target:                # ← THIS must exist!
                                   cols, index=default_idx)
             st.session_state.target_col = target
 
-with col_thresh:             # ← THIS must exist!
-        thresh = st.slider("Correlation Threshold",
+with col_thresh:
+    # ← THIS must exist!
+         thresh = st.slider("Correlation Threshold",
                            0.10, 0.90,
                            float(st.session_state.corr_threshold),
                            0.05)
         st.session_state.corr_threshold = thresh
 
-with col_info:              # ← THIS must exist!
+with col_info:  
+    # ← THIS must exist!
             if st.session_state.df_raw is not None:
             df = st.session_state.df_raw
             st.markdown(f"""
