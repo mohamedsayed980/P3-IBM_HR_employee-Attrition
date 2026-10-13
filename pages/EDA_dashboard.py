@@ -126,8 +126,12 @@ st.markdown("---")
 with st.container():
         col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
 
-#with col_load:
-        # auto-loader code ✅
+with col_load:
+    if st.session_state.df_raw is None:
+    _auto_df = _load_auto()
+    if not _auto_df.empty:
+        _register(_auto_df, "hr_attrition_clean.csv")
+       
 with col_target:
          if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
