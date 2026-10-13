@@ -675,7 +675,7 @@ with tab9:
                 _, res, err = _train_one_reg((name, REG_MODELS[name],
                                               st.session_state.get("X_train_r"), st.session_state.get("X_test_r"),
                                               st.session_state.get("y_train_r").values,
-                                              st.session_state.get("y_test_r"].values))
+                                              st.session_state.get("y_test_r").values))
                 progress.progress((i + 1) / len(sel_models_r),
                                    text=f"✅ {name}")
                 if err:
@@ -738,7 +738,7 @@ with tab9:
         r_dive = st.session_state.get("reg_results")[chosen_r]
         model  = r_dive["model"]
         y_pr   = r_dive["y_pred"]
-        y_te   = st.session_state.get("y_test_r"].values
+        y_te   = st.session_state.get("y_test_r").values
 
         c1, c2 = st.columns(2)
         with c1:
