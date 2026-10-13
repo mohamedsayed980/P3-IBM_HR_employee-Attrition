@@ -16,36 +16,110 @@
 import streamlit as st
 import pathlib, pandas as pd
 #------------------------------------------------------------------------------
-# Step 1: Initialize ALL keys first
-for _k, _v in {
-    "df_raw": None, "df_work": None, "df_clean": None,
-    "df_imputed": None, "target_col": None, "num_cols": [],
-    "cat_cols": [], "file_name": "", "corr_threshold": 0.30,
-    "important_vars": [], "iqr_table": None, "insights_text": "",
-    "feat_names": [], "data_prepared_c": False,
-    "price_bins": [0,300000,500000,750000,float('inf')],
-    "price_labels": ["Budget","Mid","Premium","Luxury"],
-}.items():
-    if _k not in st.session_state:
-        st.session_state[_k] = _v
-#===================================================================        
-# F — FILE LOADER (Auto-loads split parts OR manual upload)>>>>
-#==================================================================
-# Step 2: Auto-load from data/ folder
-_root = pathlib.Path(__file__).parent.parent
-_full = _root / "data" / "hr_attrition_clean.csv"
 
-if st.session_state.df_raw is None and _full.exists():
-    _df = pd.read_csv(_full)
-    st.session_state.df_raw   = _df.copy()
-    st.session_state.df_work  = _df.copy()
-    st.session_state.file_name = "hr_attrition_clean.csv"
-    st.session_state.num_cols  = _df.select_dtypes(
-        include="number").columns.tolist()
-    st.session_state.cat_cols  = _df.select_dtypes(
-        include="object").columns.tolist()
-    st.session_state.target_col = "Attrition_flag" \
-        if "Attrition_flag" in _df.columns else _df.columns[0]
+# =============================================================================
+# C — SESSION STATE INITIALISATION  (P3 HR Attrition)
+# =============================================================================
+def init_state():
+    defaults = {
+        "df_raw"         : None,
+        "df_clean"       : None,
+        "df_imputed"     : None,
+        "df_work"        : None,
+        "target_col"     : None,
+        "num_cols"       : [],
+        "cat_cols"       : [],
+        "important_vars" : [],
+        "iqr_table"      : None,
+        "insights_text"  : "",
+        "file_name"      : "",
+        "corr_threshold" : 0.30,
+        "feat_names"     : [],
+        "data_prepared_c": False,
+        "data_prepared_r": False,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
+ 
+init_state()
+ 
+ 
+# =============================================================================
+# F — FILE LOADER  (auto-load from data/ folder, upload as fallback)
+# =============================================================================
+_root     = pathlib.Path(__file__).parent.parent
+_csv_path = _root / "data" / "hr_attrition_clean.csv"
+ 
+ 
+@st.cache_data
+def _load_auto():
+    if _csv_path.exists():
+        return pd.read_csv(_csv_path)
+    return pd.DataFrame()
+ 
+ 
+def _register(df, name):
+    st.session_state.df_raw    = df.copy()
+    st.session_state.df_work   = df.copy()
+    st.session_state.file_name = name
+    st.session_state.num_cols  = get_numeric_cols(df)
+    st.session_state.cat_cols  = get_cat_cols(df)
+    if len(st.session_state.num_cols) == 0:
+        st.session_state.num_cols = df.select_dtypes(include="number").columns.tolist()
+    if len(st.session_state.cat_cols) == 0:
+        st.session_state.cat_cols = df.select_dtypes(include="object").columns.tolist()
+ 
+ 
+# Auto-load once, BEFORE any widget is drawn
+if st.session_state.df_raw is None:
+    _auto_df = _load_auto()
+    if not _auto_df.empty:
+        _register(_auto_df, "hr_attrition_clean.csv")
+ 
+with st.container():
+    col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
+ 
+    with col_load:
+        uploaded = st.file_uploader(
+            "Load Dataset (.csv)", type=["csv"],
+            key="file_uploader", label_visibility="collapsed")
+        if uploaded:
+            try:
+                _df = pd.read_csv(uploaded, sep=None, engine="python")
+                _register(_df, uploaded.name)
+                st.success(f"Loaded {uploaded.name} - {_df.shape[0]:,} rows x {_df.shape[1]} cols")
+            except Exception as e:
+                st.error(f"Error loading file: {e}")
+ 
+    with col_target:
+        if st.session_state.df_raw is not None:
+            cols = st.session_state.df_raw.columns.tolist()
+            default_idx = cols.index("Attrition_flag") if "Attrition_flag" in cols else 0
+            st.session_state.target_col = st.selectbox(
+                "Target Variable", cols, index=default_idx)
+ 
+    with col_thresh:
+        st.session_state.corr_threshold = st.slider(
+            "Correlation Threshold", 0.10, 0.90,
+            float(st.session_state.corr_threshold), 0.05)
+ 
+    with col_info:
+        if st.session_state.df_raw is not None:
+            _d = st.session_state.df_raw
+            st.markdown(
+                f"""<div style="background:white;border-radius:8px;padding:10px 14px;
+                box-shadow:0 2px 6px rgba(0,0,0,.08);font-size:0.82rem;line-height:1.8;">
+                <b>Shape:</b> {_d.shape[0]:,} x {_d.shape[1]}<br>
+                <b>Numeric:</b> {len(st.session_state.num_cols)} |
+                <b>Categorical:</b> {len(st.session_state.cat_cols)}<br>
+                <b>Missing:</b> {_d.isnull().sum().sum():,} cells
+                </div>""", unsafe_allow_html=True)
+        else:
+            st.info("Upload a CSV or place it in data/ folder.")
+ 
+st.markdown("---")
+ 
 # =============================================================================
 #   sidebar >>>> 
 # =============================================================================
