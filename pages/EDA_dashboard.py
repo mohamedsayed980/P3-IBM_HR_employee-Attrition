@@ -50,6 +50,7 @@ init_state()
 _root     = pathlib.Path(__file__).parent.parent
 _csv_path = _root / "data" / "hr_attrition_clean.csv"
 
+df="hr_attrition_clean.csv"
 get_numeric_cols(df):
     return df.select_dtypes(include=[np.number]).columns.tolist()
  
