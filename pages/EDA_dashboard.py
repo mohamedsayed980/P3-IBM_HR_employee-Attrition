@@ -44,20 +44,17 @@ def init_state():
  
 init_state()
  
- 
 # =============================================================================
 # F — FILE LOADER  (auto-load from data/ folder, upload as fallback)
 # =============================================================================
 _root     = pathlib.Path(__file__).parent.parent
 _csv_path = _root / "data" / "hr_attrition_clean.csv"
  
- 
 @st.cache_data
 def _load_auto():
     if _csv_path.exists():
         return pd.read_csv(_csv_path)
     return pd.DataFrame()
- 
  
 def _register(df, name):
     st.session_state.df_raw    = df.copy()
@@ -127,14 +124,25 @@ with st.container():
         col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
 
 with col_load:
-    def _load_auto():
-    if _csv_path.exists():
-        return pd.read_csv(_csv_path)
-    return pd.DataFrame()
     if st.session_state.df_raw is None:
-         _auto_df = _load_auto()
+    _auto_df = _load_auto()
     if not _auto_df.empty:
         _register(_auto_df, "hr_attrition_clean.csv")
+ 
+with st.container():
+    col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
+ 
+    with col_load:
+        uploaded = st.file_uploader(
+            "Load Dataset (.csv)", type=["csv"],
+            key="file_uploader", label_visibility="collapsed")
+        if uploaded:
+            try:
+                _df = pd.read_csv(uploaded, sep=None, engine="python")
+                _register(_df, uploaded.name)
+                st.success(f"Loaded {uploaded.name} - {_df.shape[0]:,} rows x {_df.shape[1]} cols")
+            except Exception as e:
+                st.error(f"Error loading file: {e}")
        
 with col_target:
          if st.session_state.df_raw is not None:
