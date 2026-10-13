@@ -271,7 +271,7 @@ def prepare_classification(df: pd.DataFrame):
     else:
         bins   = st.session_state.get("price_bins")
         labels = st.session_state.get("price_labels")
-        df2["price_category"] = pd.cut(df2[st.session_state.get("target_col")]), bins=bins,
+        df2["price_category"] = pd.cut(df2[st.session_state.get("target_col")], bins=bins,
                                        labels=labels, right=True)
         df2.dropna(subset=["price_category"], inplace=True)
         le    = LabelEncoder()
