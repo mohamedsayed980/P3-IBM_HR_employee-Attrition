@@ -1466,7 +1466,7 @@ with tab12:
                     pred_price   = st.session_state.get("reg_models")[sel_pred_r].predict(
                         row_scaled_r)[0]
                     st.session_state.get("_last_pred_price") = pred_price
-                    st.session_state.get("_last_pred_model_r"] = sel_pred_r
+                    st.session_state.get("_last_pred_model_r") = sel_pred_r
 
                 # ── Classification prediction ────────────────────────────────
                 if have_cls:
@@ -1476,7 +1476,7 @@ with tab12:
                         row_scaled_c)[0]
                     pred_cat     = st.session_state.get("le").inverse_transform([pred_cat_enc])[0]
                     st.session_state.get("_last_pred_cat"]   = pred_cat
-                    st.session_state.get("_last_pred_model_c"] = sel_pred_c
+                    st.session_state.get("_last_pred_model_c") = sel_pred_c
 
                     # Confidence
                     if hasattr(st.session_state.get("cls_models")[sel_pred_c], "predict_proba"):
