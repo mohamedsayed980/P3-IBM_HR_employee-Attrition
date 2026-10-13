@@ -1294,7 +1294,7 @@ with tab11:
                     story.append(Paragraph("Stage 2 Feed (Tab 6)", h2_style))
                     story.append(Paragraph(
                         st.session_state.get("stage2_insights").replace("\n","<br/>"),
-                        stylest.session_state.get("Code"]))
+                        stylest.session_state.get("Code")))
 
                     doc.build(story)
                     buf_pdf.seek(0)
