@@ -893,8 +893,8 @@ with tab10:
 
         if use_parallel_c:
             args_list2 = [(n, CLS_MODELS[n],
-                           st.session_state.get("X_train_c"), st.session_state.get("X_test_c"],
-                           st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"])
+                           st.session_state.get("X_train_c"), st.session_state.get("X_test_c"),
+                           st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"))
                           for n in sel_models_c]
             with concurrent.futures.ThreadPoolExecutor() as exe:
                 futs2 = {exe.submit(_train_one_cls, a): a[0] for a in args_list2}
