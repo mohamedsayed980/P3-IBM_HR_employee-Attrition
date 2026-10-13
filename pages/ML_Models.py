@@ -653,8 +653,8 @@ with tab9:
         if use_parallel_r:
             # ── Parallel via ThreadPoolExecutor ──────────────────────────────
             args_list = [(n, REG_MODELS[n],
-                          st.session_state.get("X_train_r"), st.session_state.get("X_test_r"],
-                          st.session_state.get("y_train_r").values, st.session_state.get("y_test_r"].values)
+                          st.session_state.get("X_train_r"), st.session_state.get("X_test_r"),
+                          st.session_state.get("y_train_r").values, st.session_state.get("y_test_r").values)
                          for n in sel_models_r]
             with concurrent.futures.ThreadPoolExecutor(max_workers=n_jobs_r) as exe:
                 futs = {exe.submit(_train_one_reg, a): a[0] for a in args_list}
@@ -673,7 +673,7 @@ with tab9:
             for i, name in enumerate(sel_models_r):
                 status.info(f"Training {name} …")
                 _, res, err = _train_one_reg((name, REG_MODELS[name],
-                                              st.session_state.get("X_train_r"), st.session_state.get("X_test_r"],
+                                              st.session_state.get("X_train_r"), st.session_state.get("X_test_r"),
                                               st.session_state.get("y_train_r").values,
                                               st.session_state.get("y_test_r"].values))
                 progress.progress((i + 1) / len(sel_models_r),
