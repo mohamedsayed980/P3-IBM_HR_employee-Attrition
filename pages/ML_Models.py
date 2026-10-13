@@ -225,7 +225,7 @@ def section(title: str):
 def load_data() -> pd.DataFrame | None:
     """Returns cleaned dataframe — from session_state (Stage 1 or upload)."""
     # Try Stage 1 key first, then Stage 2 upload key
-    df = S.get("df_work")
+    df = S.get["df_work"]
     if df is None:
         df = S.get("df_clean")
     if df is not None and not isinstance(df, pd.DataFrame):
@@ -234,11 +234,11 @@ def load_data() -> pd.DataFrame | None:
 
 # ── D5: prepare regression split ────────────────────────────────────────────
 def prepare_regression(df: pd.DataFrame):
-    target   = st.session_state.get("target_col")
-    feats    = st.session_state.get("feat_names") or [c for c in df.columns
+    target   = st.session_state.get["target_col"]
+    feats    = st.session_state.get["feat_names"] or [c for c in df.columns
                                    if c != target and
                                    pd.api.types.is_numeric_dtype(df[c])]
-    st.session_state.get("feat_names") = feats
+    st.session_state.get["feat_names"] = feats
     # Drop rows where target is null (e.g. delivery_days nulls for non-delivered)
     df_r = df.dropna(subset=[target]).copy()
     X = df_r[feats].fillna(df_r[feats].median())
@@ -255,7 +255,7 @@ def prepare_regression(df: pd.DataFrame):
 # ── D6: prepare classification split ────────────────────────────────────────
 def prepare_classification(df: pd.DataFrame):
     # ── Detect binary target: Attrition_flag (P3) or is_satisfied (P2)
-    feats   = st.session_state.get("feat_names")
+    feats   = st.session_state.get["feat_names"]
     df2     = df.copy()
 
     if "Attrition_flag" in df2.columns:
@@ -271,7 +271,7 @@ def prepare_classification(df: pd.DataFrame):
     else:
         bins   = st.session_state.get("price_bins")
         labels = st.session_state.get("price_labels")
-        df2["price_category"] = pd.cut(df2[st.session_state.get("target_col")], bins=bins,
+        df2["price_category"] = pd.cut(df2[st.session_state.get["target_col"]], bins=bins,
                                        labels=labels, right=True)
         df2.dropna(subset=["price_category"], inplace=True)
         le    = LabelEncoder()
@@ -328,7 +328,7 @@ def cls_metrics(model, X_tr, X_te, y_tr, y_te, n_cv=5):
     if hasattr(model, "predict_proba"):
         try:
             y_prob = model.predict_proba(X_te)
-            rest.session_state.get("y_prob") = y_prob
+            rest.session_state.get["y_prob"] = y_prob
         except Exception:
             pass
     return res
@@ -653,8 +653,8 @@ with tab9:
         if use_parallel_r:
             # ── Parallel via ThreadPoolExecutor ──────────────────────────────
             args_list = [(n, REG_MODELS[n],
-                          st.session_state.get("X_train_r"), st.session_state.get("X_test_r"),
-                          st.session_state.get("y_train_r").values, st.session_state.get("y_test_r").values)
+                          st.session_state.get("X_train_r"), st.session_state.get["X_test_r"],
+                          st.session_state.get("y_train_r").values, st.session_state.get["y_test_r"].values)
                          for n in sel_models_r]
             with concurrent.futures.ThreadPoolExecutor(max_workers=n_jobs_r) as exe:
                 futs = {exe.submit(_train_one_reg, a): a[0] for a in args_list}
@@ -673,9 +673,9 @@ with tab9:
             for i, name in enumerate(sel_models_r):
                 status.info(f"Training {name} …")
                 _, res, err = _train_one_reg((name, REG_MODELS[name],
-                                              st.session_state.get("X_train_r"), st.session_state.get("X_test_r"),
+                                              st.session_state.get("X_train_r"), st.session_state.get["X_test_r"],
                                               st.session_state.get("y_train_r").values,
-                                              st.session_state.get("y_test_r").values))
+                                              st.session_state.get["y_test_r"].values))
                 progress.progress((i + 1) / len(sel_models_r),
                                    text=f"✅ {name}")
                 if err:
@@ -738,7 +738,7 @@ with tab9:
         r_dive = st.session_state.get("reg_results")[chosen_r]
         model  = r_dive["model"]
         y_pr   = r_dive["y_pred"]
-        y_te   = st.session_state.get("y_test_r").values
+        y_te   = st.session_state.get["y_test_r"].values
 
         c1, c2 = st.columns(2)
         with c1:
@@ -749,7 +749,7 @@ with tab9:
 
         c3, c4 = st.columns(2)
         with c3:
-            st.pyplot(plot_feature_importance(model, st.session_state.get("feat_names"),
+            st.pyplot(plot_feature_importance(model, st.session_state.get["feat_names"],
                                                f"{chosen_r} — Feature Importance"))
         with c4:
             if st.checkbox("Show learning curve", key="lc_r"):
@@ -793,9 +793,9 @@ with tab9:
                 os.makedirs(save_dir, exist_ok=True)
                 path = os.path.join(save_dir, f"{model_to_save.replace(' ','_')}_reg.pkl")
                 joblib.dump({"model": st.session_state.get("reg_models")[model_to_save],
-                              "scaler": st.session_state.get("scaler_r"),
-                              "features": st.session_state.get("feat_names"),
-                              "target": st.session_state.get("target_col"),
+                              "scaler": st.session_state.get["scaler_r"],
+                              "features": st.session_state.get["feat_names"],
+                              "target": st.session_state.get["target_col"],
                               "metrics": st.session_state.get("reg_results")[model_to_save]},
                              path)
                 st.success(f"Saved → `{path}`")
@@ -803,8 +803,8 @@ with tab9:
         # In-memory download
         buf = io.BytesIO()
         joblib.dump({"model": st.session_state.get("reg_models")[list(st.session_state.get("reg_models").keys())[0]],
-                      "scaler": st.session_state.get("scaler_r"),
-                      "features": st.session_state.get("feat_names")}, buf)
+                      "scaler": st.session_state.get["scaler_r"],
+                      "features": st.session_state.get["feat_names"]}, buf)
         st.download_button("⬇️ Download best model (pkl)",
                             buf.getvalue(),
                             file_name=f"{best_n.replace(' ','_')}_reg.pkl",
@@ -864,7 +864,7 @@ with tab10:
         if st.button("🗑️ Clear Results", use_container_width=True,
                      key="clr_c_btn"):
             st.session_state.get("reg_results") = {}
-            st.session_state.get("cls_models")  = {}
+            st.session_state.get["cls_models"]  = {}
             st.rerun()
 #-------------------------------------------------
 # ── CPU sidebar display ──────────────────────────────────────────────────
@@ -893,8 +893,8 @@ with tab10:
 
         if use_parallel_c:
             args_list2 = [(n, CLS_MODELS[n],
-                           st.session_state.get("X_train_c"), st.session_state.get("X_test_c"),
-                           st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"))
+                           st.session_state.get["X_train_c"], st.session_state.get["X_test_c"],
+                           st.session_state.get["y_train_c"],  st.session_state.get["y_test_c"])
                           for n in sel_models_c]
             with concurrent.futures.ThreadPoolExecutor() as exe:
                 futs2 = {exe.submit(_train_one_cls, a): a[0] for a in args_list2}
@@ -912,8 +912,8 @@ with tab10:
             for i, name in enumerate(sel_models_c):
                 status2.info(f"Training {name} …")
                 _, res, err = _train_one_cls((name, CLS_MODELS[name],
-                                              st.session_state.get("X_train_c"), st.session_state.get("X_test_c"),
-                                              st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"))
+                                              st.session_state.get["X_train_c"], st.session_state.get["X_test_c"],
+                                              st.session_state.get["y_train_c"],  st.session_state.get["y_test_c"])
                 progress2.progress((i + 1) / len(sel_models_c),
                                     text=f"✅ {name}")
                 if err:
@@ -922,7 +922,7 @@ with tab10:
                     results2[name] = res
 
         st.session_state.get("reg_results").update(results2)
-        st.session_state.get("cls_models").update({n: r["model"] for n, r in results2.items()})
+        st.session_state.get["cls_models"].update({n: r["model"] for n, r in results2.items()})
         best_c = max(results2, key=lambda k: results2[k]["acc"])
         st.session_state.get("best_cls_name") = best_c
         update_stage2_insights()
@@ -971,7 +971,7 @@ with tab10:
         chosen_c = st.selectbox("Select classifier",
                                   list(st.session_state.get("reg_results").keys()), key="dive_c")
         r_cdive  = st.session_state.get("reg_results")[chosen_c]
-        le_inv   = [str(c) for c in st.session_state.get("le").classes_]  # must be strings for classification_report
+        le_inv   = [str(c) for c in st.session_state.get["le"].classes_]  # must be strings for classification_report
 
         c1, c2 = st.columns(2)
         with c1:
@@ -979,21 +979,21 @@ with tab10:
                                f"{chosen_c} — Confusion Matrix"))
         with c2:
             st.pyplot(plot_feature_importance(r_cdive["model"],
-                                               st.session_state.get("feat_names"),
+                                               st.session_state.get["feat_names"],
                                                f"{chosen_c} — Feature Importance",
                                                CLR["purple"]))
         # Classification report
         with st.expander("📋 Full Classification Report"):
             cr_txt = classification_report(
-                st.session_state.get("y_test_c"), r_cdive["y_pred"],
+                st.session_state.get["y_test_c"], r_cdive["y_pred"],
                 target_names=le_inv, zero_division=0)
             st.code(cr_txt, language="text")
 
         # ROC — only if model supports predict_proba and binary / OvR
         if "y_prob" in r_cdive and len(le_inv) == 2:
             section("📈 ROC Curve")
-            fpr, tpr, _ = roc_curve(st.session_state.get("y_test_c"), r_cdive["y_prob"][:, 1])
-            auc_val      = roc_auc_score(st.session_state.get("y_test_c"), r_cdive["y_prob"][:, 1])
+            fpr, tpr, _ = roc_curve(st.session_state.get["y_test_c"], r_cdive["y_prob"][:, 1])
+            auc_val      = roc_auc_score(st.session_state.get["y_test_c"], r_cdive["y_prob"][:, 1])
             fig_roc, ax_roc = plt.subplots(figsize=(5, 4))
             ax_roc.plot(fpr, tpr, color=CLR["primary"], lw=2,
                         label=f"AUC = {auc_val:.3f}")
@@ -1008,7 +1008,7 @@ with tab10:
             with st.spinner("Computing …"):
                 fig_lcc = plot_learning_curve(
                     r_cdive["model"],
-                    st.session_state.get("X_train_c"), st.session_state.get("y_train_c"),
+                    st.session_state.get["X_train_c"], st.session_state.get["y_train_c"],
                     "cls", f"{chosen_c} — Learning Curve")
                 st.pyplot(fig_lcc)
 
@@ -1037,26 +1037,26 @@ with tab10:
         col_sv3, col_sv4 = st.columns(2)
         with col_sv3:
             model_to_save_c = st.selectbox("Classifier to save",
-                                            list(st.session_state.get("cls_models").keys()),
+                                            list(st.session_state.get["cls_models"].keys()),
                                             key="save_c_sel")
         with col_sv4:
             if st.button("💾 Save to disk", key="save_c_btn"):
                 os.makedirs(save_dir, exist_ok=True)
                 path_c = os.path.join(save_dir,
                              f"{model_to_save_c.replace(' ','_')}_cls.pkl")
-                joblib.dump({"model"   : st.session_state.get("cls_models")[model_to_save_c],
-                              "scaler"  : st.session_state.get("scaler_c"),
-                              "le"      : st.session_state.get("le"),
-                              "features": st.session_state.get("feat_names"),
+                joblib.dump({"model"   : st.session_state.get["cls_models"][model_to_save_c],
+                              "scaler"  : st.session_state.get["scaler_c"],
+                              "le"      : st.session_state.get["le"],
+                              "features": st.session_state.get["feat_names"],
                               "metrics" : st.session_state.get("reg_results")[model_to_save_c]},
                              path_c)
                 st.success(f"Saved → `{path_c}`")
 
         buf_c = io.BytesIO()
-        joblib.dump({"model"   : st.session_state.get("cls_models")[best_cn],
-                      "scaler"  : st.session_state.get("scaler_c"),
-                      "le"      : st.session_state.get("le"),
-                      "features": st.session_state.get("feat_names")}, buf_c)
+        joblib.dump({"model"   : st.session_state.get["cls_models"][best_cn],
+                      "scaler"  : st.session_state.get["scaler_c"],
+                      "le"      : st.session_state.get["le"],
+                      "features": st.session_state.get["feat_names"]}, buf_c)
         st.download_button("⬇️ Download best classifier (pkl)",
                             buf_c.getvalue(),
                             file_name=f"{best_cn.replace(' ','_')}_cls.pkl",
@@ -1220,12 +1220,12 @@ with tab11:
 
                     # Title
                     title_style = ParagraphStyle("Title2",
-                        parent=stylest.session_state.get("Title"), fontSize=20,
+                        parent=stylest.session_state.get["Title"], fontSize=20,
                         textColor=colors.HexColor("#1E3A8A"), spaceAfter=6)
                     story.append(Paragraph("ML Models Engine — Report", title_style))
                     story.append(Paragraph(
                         f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}",
-                        stylest.session_state.get("Normal")))
+                        stylest.session_state.get["Normal"]))
                     
                     story.append(HRFlowable(width="100%", thickness=1,
                                              color=colors.HexColor("#2563EB")))
@@ -1294,7 +1294,7 @@ with tab11:
                     story.append(Paragraph("Stage 2 Feed (Tab 6)", h2_style))
                     story.append(Paragraph(
                         st.session_state.get("stage2_insights").replace("\n","<br/>"),
-                        stylest.session_state.get("Code")))
+                        stylest.session_state.get["code"]))
 
                     doc.build(story)
                     buf_pdf.seek(0)
@@ -1405,7 +1405,7 @@ with tab12:
     st.markdown("## 🔮 Predict New Data")
 
     have_reg = bool(st.session_state.get("reg_models"))
-    have_cls = bool(st.session_state.get("cls_models"))
+    have_cls = bool(st.session_state.get["cls_models"])
 
     if not have_reg and not have_cls:
         st.markdown('<div class="warning-box">⚠️ No models trained yet. '
@@ -1427,11 +1427,11 @@ with tab12:
             if have_cls:
                 sel_pred_c = st.selectbox(
                     "Classification model",
-                    list(st.session_state.get("cls_models").keys()), key="pred_c_sel")
+                    list(st.session_state.get["cls_models"].keys()), key="pred_c_sel")
 
         # ── 12.1 SINGLE ROW PREDICTION ───────────────────────────────────────
         section("🎯 Single-Row Prediction")
-        feat_names = st.session_state.get("feat_names")
+        feat_names = st.session_state.get["feat_names"]
 
         if st.session_state.df_raw is not None and feat_names:
             ref_df = df_global[feat_names].describe()
@@ -1461,31 +1461,31 @@ with tab12:
 
                 # ── Regression prediction ────────────────────────────────────
                 if have_reg:
-                    row_scaled_r = st.session_state.get("scaler_r").transform(
+                    row_scaled_r = st.session_state.get["scaler_r"].transform(
                         row_df[feat_names].values)
                     pred_price   = st.session_state.get("reg_models")[sel_pred_r].predict(
                         row_scaled_r)[0]
-                    st.session_state.get("_last_pred_price") = pred_price
-                    st.session_state.get("_last_pred_model_r") = sel_pred_r
+                    st.session_state.get["_last_pred_price"] = pred_price
+                    st.session_state.get["_last_pred_model_r"] = sel_pred_r
 
                 # ── Classification prediction ────────────────────────────────
                 if have_cls:
-                    row_scaled_c = st.session_state.get("scaler_c").transform(
+                    row_scaled_c = st.session_state.get["scaler_c"].transform(
                         row_df[feat_names].values)
-                    pred_cat_enc = st.session_state.get("cls_models")[sel_pred_c].predict(
+                    pred_cat_enc = st.session_state.get["cls_models"][sel_pred_c].predict(
                         row_scaled_c)[0]
-                    pred_cat     = st.session_state.get("le").inverse_transform([pred_cat_enc])[0]
-                    st.session_state.get("_last_pred_cat")  = pred_cat
-                    st.session_state.get("_last_pred_model_c") = sel_pred_c
+                    pred_cat     = st.session_state.get["le"].inverse_transform([pred_cat_enc])[0]
+                    st.session_state.get["_last_pred_cat"]  = pred_cat
+                    st.session_state.get["_last_pred_model_c"] = sel_pred_c
 
                     # Confidence
-                    if hasattr(st.session_state.get("cls_models")[sel_pred_c], "predict_proba"):
-                        proba = st.session_state.get("cls_models")[sel_pred_c].predict_proba(
+                    if hasattr(st.session_state.get["cls_models"][sel_pred_c], "predict_proba"):
+                        proba = st.session_state.get["cls_models"][sel_pred_c].predict_proba(
                             row_scaled_c)[0]
                         conf  = proba.max() * 100
-                        st.session_state.get("_last_pred_conf") = conf
+                        st.session_state.get["_last_pred_conf"] = conf
                     else:
-                        st.session_state.get("_last_pred_conf") = None
+                        st.session_state.get["_last_pred_conf"] = None
 
             # ── Display results ───────────────────────────────────────────────
             if "_last_pred_price" in S or "_last_pred_cat" in S:
@@ -1494,7 +1494,7 @@ with tab12:
 
                 if "_last_pred_price" in S and have_reg:
                     with res_c1:
-                        pp = st.session_state.get("_last_pred_price")
+                        pp = st.session_state.get["_last_pred_price"]
                         st.markdown(f"""
                         <div class="pred-card">
                           <div class="pred-label">📉 Regression Result
@@ -1505,8 +1505,8 @@ with tab12:
 
                 if "_last_pred_cat" in S and have_cls:
                     with res_c2:
-                        cat  = st.session_state.get("_last_pred_cat")
-                        conf = S.get("_last_pred_conf")
+                        cat  = st.session_state.get["_last_pred_cat"]
+                        conf = S.get["_last_pred_conf"]
                         badge_cls, icon = CAT_STYLE.get(cat, ("badge-purple","⬜"))
                         st.markdown(f"""
                         <div class="pred-card">
@@ -1559,20 +1559,20 @@ with tab12:
 
                         # Regression
                         if have_reg:
-                            X_b_r = st.session_state.get("scaler_r").transform(X_batch)
+                            X_b_r = st.session_state.get["scaler_r"].transform(X_batch)
                             df_out["Predicted_Price"] = \
                                 st.session_state.get("reg_models")[sel_pred_r].predict(X_b_r)
 
                         # Classification
                         if have_cls:
-                            X_b_c = st.session_state.get("scaler_c").transform(X_batch)
-                            enc_cats = st.session_state.get("cls_models")[sel_pred_c].predict(X_b_c)
+                            X_b_c = st.session_state.get["scaler_c"].transform(X_batch)
+                            enc_cats = st.session_state.get["cls_models"][sel_pred_c].predict(X_b_c)
                             df_out["Predicted_Category"] = \
-                                st.session_state.get("le").inverse_transform(enc_cats)
+                                st.session_state.get["le"].inverse_transform(enc_cats)
 
-                            if hasattr(st.session_state.get("cls_models")[sel_pred_c],
+                            if hasattr(st.session_state.get["cls_models"][sel_pred_c],
                                        "predict_proba"):
-                                probas = st.session_state.get("cls_models")[sel_pred_c]\
+                                probas = st.session_state.get["cls_models"][sel_pred_c]\
                                              .predict_proba(X_b_c)
                                 df_out["Confidence_%"] = \
                                     (probas.max(axis=1) * 100).round(2)
@@ -1692,12 +1692,12 @@ with tab13:
         lines.append("")
         lines.append("1. DATASET SUMMARY")
         lines.append("─" * 45)
-        if S.get("file_name"):
+        if S.get["file_name"]:
             lines.append(f"   File    : {S.get('file_name', 'N/A')}")
-        if S.get("df_work") is not None:
-            df_w = st.session_state.get("df_work")
+        if S.get["df_work"] is not None:
+            df_w = st.session_state.get["df_work"]
             lines.append(f"   Shape   : {df_w.shape[0]:,} rows × {df_w.shape[1]} columns")
-        if S.get("target_col"):
+        if S.get["target_col"]:
             lines.append(f"   Target  : {S['target_col']}")
         if S.get("important_vars"):
             lines.append(f"   Features selected : {len(S['important_vars'])}")
@@ -1746,7 +1746,7 @@ with tab13:
         lines.append("")
         lines.append("4. CLASSIFICATION MODEL RESULTS  (Stage 2)")
         lines.append("─" * 45)
-        if S.get("cls_results"):
+        if S.get["cls_results"]:
             sorted_cls = sorted(st.session_state.get("reg_results").items(),
                                 key=lambda x: x[1]["acc"], reverse=True)
             for rank, (name, r) in enumerate(sorted_cls, 1):
@@ -1776,7 +1776,7 @@ with tab13:
         if S.get("reg_results"):
             best_r = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
             lines.append(f"   • Use {best_r} for regression tasks")
-        if S.get("cls_results"):
+        if S.get["cls_results"]:
             best_c = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
             lines.append(f"   • Use {best_c} for classification tasks")
         lines.append("   • Run Predict New Data (Tab 12) for inference")
@@ -1786,7 +1786,7 @@ with tab13:
         lines.append("   Report generated by ML Engine — Stage 1 + Stage 2")
         lines.append("=" * 65)
 
-        st.session_state.get("final_report_text") = "\n".join(lines)
+        st.session_state.get["final_report_text"] = "\n".join(lines)
 
 
 
@@ -1798,9 +1798,9 @@ with tab13:
  # ─────────────────────────────────────────────────────────────────────────────
 
  # ── Display ───────────────────────────────────────────────────────────────────
-if S.get("final_report_text"):
+if S.get["final_report_text"]:
      st.text_area("📋 Final Report",
-                  value=st.session_state.get("final_report_text"),
+                  value=st.session_state.get["final_report_text"],
                   height=520,
                   key="final_report_area")
 
@@ -1813,7 +1813,7 @@ if S.get("final_report_text"):
          st.markdown("**Plain Text**")
          st.download_button(
              "📥 Download TXT",
-             data=st.session_state.get("final_report_text"),
+             data=st.session_state.get["final_report_text"],
              file_name="Final_Insights_Report.txt",
              mime="text/plain",
              key="dl_final_txt",
@@ -1839,7 +1839,7 @@ if S.get("final_report_text"):
                  # ── Styles ────────────────────────────────────────────────
                  title_style = ParagraphStyle(
                      "FinalTitle",
-                     parent=stylest.session_state.get("Title"), fontSize=20,
+                     parent=stylest.session_state.get["Title"], fontSize=20,
                      textColor=colors.HexColor("#1E3A8A"), spaceAfter=6)
                  h2_style = ParagraphStyle(
                      "FinalH2",
@@ -1851,7 +1851,7 @@ if S.get("final_report_text"):
                      textColor=colors.HexColor("#059669"), spaceBefore=8)
                  body_style = ParagraphStyle(
                      "FinalBody",
-                     parent=stylest.session_state.get("Normal"), fontSize=9,
+                     parent=stylest.session_state.get["Normal"], fontSize=9,
                      leading=14, spaceAfter=4)
 
                  # ── Title block ───────────────────────────────────────────
@@ -1860,7 +1860,7 @@ if S.get("final_report_text"):
                  story.append(Paragraph(
                      f"ML Engine — End-to-End · "
                      f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}",
-                     stylest.session_state.get("Normal"))
+                     stylest.session_state.get["Normal"])
                  story.append(HRFlowable(
                      width="100%", thickness=2,
                      color=colors.HexColor("#1E3A8A")))
@@ -1869,14 +1869,14 @@ if S.get("final_report_text"):
                  # ── Section 1: Dataset Summary ────────────────────────────
                  story.append(Paragraph("1. Dataset Summary", h2_style))
                  ds_data = [["Item", "Value"]]
-                 if S.get("file_name"):
-                     ds_data.append(["File", st.session_state.get("file_name")])
-                 if S.get("df_work") is not None:
-                     df_w = st.session_state.get("df_work")
+                 if S.get["file_name"]:
+                     ds_data.append(["File", st.session_state.get["file_name"]])
+                 if S.get["df_work"] is not None:
+                     df_w = st.session_state.get["df_work"]
                      ds_data.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
-                 if S.get("target_col"):
-                     ds_data.append(["Target", st.session_state.get("target_col")])
+                 if S.get["target_col"]:
+                     ds_data.append(["Target", st.session_state.get["target_col"]])
                  if S.get("important_vars"):
                      ds_data.append(["Features selected",
                          str(len(st.session_state.get("important_vars")))]
@@ -1955,7 +1955,7 @@ if S.get("final_report_text"):
                  # ── Section 4: Classification Results ─────────────────────
                  story.append(Paragraph(
                      "4. Classification Model Results (Stage 2)", h2_style))
-                 if S.get("cls_results"):
+                 if S.get["cls_results"]:
                      c_data = [["Model", "Accuracy", "F1",
                                 "Precision", "Recall", "CV Acc"]]
                      sorted_cls = sorted(
@@ -2008,7 +2008,7 @@ if S.get("final_report_text"):
                      best_r = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"• Use {best_r} for regression tasks")
-                 if S.get("cls_results"):
+                 if S.get["cls_results"]:
                      best_c = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"• Use {best_c} for classification tasks")
@@ -2022,7 +2022,7 @@ if S.get("final_report_text"):
                      color=colors.HexColor("#CBD5E1")))
                  story.append(Paragraph(
                      "Report generated by ML Engine — Stage 1 + Stage 2 · Mohamed",
-                     stylest.session_state.get("Normal")))
+                     stylest.session_state.get["Normal"]))
 
                  doc_pdf.build(story)
                  buf_pdf.seek(0)
@@ -2069,14 +2069,14 @@ if S.get("final_report_text"):
                  # ── Dataset Summary ───────────────────────────────────────
                  wd_doc.add_heading("1. Dataset Summary", 1)
                  ds_rows = []
-                 if S.get("file_name"):
-                     ds_rows.append(["File", st.session_state.get("file_name")])
-                 if S.get("df_work") is not None:
-                     df_w = st.session_state.get("df_work")
+                 if S.get["file_name"]:
+                     ds_rows.append(["File", st.session_state.get["file_name"]])
+                 if S.get["df_work"] is not None:
+                     df_w = st.session_state.get["df_work"]
                      ds_rows.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
-                 if S.get("target_col"):
-                     ds_rows.append(["Target", st.session_state.get("target_col")])
+                 if S.get["target_col"]:
+                     ds_rows.append(["Target", st.session_state.get["target_col"]])
                  if S.get("important_vars"):
                      ds_rows.append(["Features selected",
                          str(len(st.session_state.get("important_vars")))])
@@ -2125,7 +2125,7 @@ if S.get("final_report_text"):
                  # ── Classification Results ────────────────────────────────
                  wd_doc.add_heading(
                      "4. Classification Model Results (Stage 2)", 1)
-                 if S.get("cls_results"):
+                 if S.get["cls_results"]:
                      sorted_cls = sorted(
                          st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["acc"], reverse=True)
@@ -2159,7 +2159,7 @@ if S.get("final_report_text"):
                      best_r = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"Use {best_r} for regression tasks")
-                 if S.get("cls_results"):
+                 if S.get["cls_results"]:
                      best_c = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"Use {best_c} for classification tasks")
