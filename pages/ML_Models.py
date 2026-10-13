@@ -1695,7 +1695,7 @@ with tab13:
         if S.get("file_name"):
             lines.append(f"   File    : {S.get('file_name', 'N/A')}")
         if S.get("df_work") is not None:
-            df_w = st.session_state.get("df_work"]
+            df_w = st.session_state.get("df_work")
             lines.append(f"   Shape   : {df_w.shape[0]:,} rows × {df_w.shape[1]} columns")
         if S.get("target_col"):
             lines.append(f"   Target  : {S['target_col']}")
