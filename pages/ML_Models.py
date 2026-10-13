@@ -487,7 +487,7 @@ def update_stage2_insights():
                   f"Accuracy    : {r['acc']*100:.2f}%",
                   f"F1 Score    : {r['f1']:.4f}",
                   f"CV Acc mean : {r['cv_mean']*100:.2f}% ± {r['cv_std']*100:.2f}%"]
-    st.session_state.get("stage2_insights"] = "\n".join(lines)
+    st.session_state.get("stage2_insights") = "\n".join(lines)
 
 # ── D16: fig → bytes ─────────────────────────────────────────────────────────
 def fig_to_bytes(fig) -> bytes:
@@ -1192,8 +1192,8 @@ with tab11:
                     'injected into <b>Tab 6 · Insights & Recommendations</b> of '
                     'the EDA Dashboard whenever models have been trained.</div>',
                     unsafe_allow_html=True)
-        if st.session_state.get("stage2_insights"]:
-            st.code(st.session_state.get("stage2_insights"], language="text")
+        if st.session_state.get("stage2_insights"):
+            st.code(st.session_state.get("stage2_insights"), language="text")
         else:
             st.caption("No results yet — train models first.")
 
@@ -1292,7 +1292,7 @@ with tab11:
                     story.append(Spacer(1, .2*inch))
                     story.append(Paragraph("Stage 2 Feed (Tab 6)", h2_style))
                     story.append(Paragraph(
-                        st.session_state.get("stage2_insights"].replace("\n","<br/>"),
+                        st.session_state.get("stage2_insights").replace("\n","<br/>"),
                         stylest.session_state.get("Code"]))
 
                     doc.build(story)
@@ -1358,7 +1358,7 @@ with tab11:
                         wd_doc.add_paragraph()
 
                     wd_doc.add_heading("Stage 2 Feed (Tab 6)", 1)
-                    wd_doc.add_paragraph(st.session_state.get("stage2_insights"])
+                    wd_doc.add_paragraph(st.session_state.get("stage2_insights"))
 
                     buf_wd = io.BytesIO()
                     wd_doc.save(buf_wd)
