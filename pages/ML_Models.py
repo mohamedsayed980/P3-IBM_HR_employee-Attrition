@@ -1475,7 +1475,7 @@ with tab12:
                     pred_cat_enc = st.session_state.get("cls_models")[sel_pred_c].predict(
                         row_scaled_c)[0]
                     pred_cat     = st.session_state.get("le").inverse_transform([pred_cat_enc])[0]
-                    st.session_state.get("_last_pred_cat"]   = pred_cat
+                    st.session_state.get("_last_pred_cat")  = pred_cat
                     st.session_state.get("_last_pred_model_c") = sel_pred_c
 
                     # Confidence
