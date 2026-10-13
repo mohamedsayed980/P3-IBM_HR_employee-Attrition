@@ -54,7 +54,7 @@ with st.container():
 
 with col_load:
     # auto-loader code ✅
-with col_target: 
+with col_target:
     # ← THIS must exist!
             if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
