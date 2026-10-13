@@ -127,6 +127,7 @@ with st.container():
         col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
 
 with col_load:
+    
     # auto-loader code ✅
 with col_target:
     # ← THIS must exist!
