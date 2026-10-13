@@ -328,7 +328,7 @@ def cls_metrics(model, X_tr, X_te, y_tr, y_te, n_cv=5):
     if hasattr(model, "predict_proba"):
         try:
             y_prob = model.predict_proba(X_te)
-            rest.session_state.get("y_prob"] = y_prob
+            rest.session_state.get("y_prob") = y_prob
         except Exception:
             pass
     return res
