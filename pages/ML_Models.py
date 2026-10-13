@@ -255,7 +255,7 @@ def prepare_regression(df: pd.DataFrame):
 # ── D6: prepare classification split ────────────────────────────────────────
 def prepare_classification(df: pd.DataFrame):
     # ── Detect binary target: Attrition_flag (P3) or is_satisfied (P2)
-    feats   = st.session_state.get("feat_names"]
+    feats   = st.session_state.get("feat_names")
     df2     = df.copy()
 
     if "Attrition_flag" in df2.columns:
