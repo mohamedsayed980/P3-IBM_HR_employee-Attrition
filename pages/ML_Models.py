@@ -971,7 +971,7 @@ with tab10:
         chosen_c = st.selectbox("Select classifier",
                                   list(st.session_state.get("reg_results").keys()), key="dive_c")
         r_cdive  = st.session_state.get("reg_results")[chosen_c]
-        le_inv   = [str(c) for c in st.session_state.get("le"].classes_]  # must be strings for classification_report
+        le_inv   = [str(c) for c in st.session_state.get("le").classes_]  # must be strings for classification_report
 
         c1, c2 = st.columns(2)
         with c1:
