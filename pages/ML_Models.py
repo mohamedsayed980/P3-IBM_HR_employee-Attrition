@@ -793,7 +793,7 @@ with tab9:
                 os.makedirs(save_dir, exist_ok=True)
                 path = os.path.join(save_dir, f"{model_to_save.replace(' ','_')}_reg.pkl")
                 joblib.dump({"model": st.session_state.get("reg_models")[model_to_save],
-                              "scaler": st.session_state.get("scaler_r"],
+                              "scaler": st.session_state.get("scaler_r"),
                               "features": st.session_state.get("feat_names"],
                               "target": st.session_state.get("target_col"],
                               "metrics": st.session_state.get("reg_results")[model_to_save]},
@@ -803,7 +803,7 @@ with tab9:
         # In-memory download
         buf = io.BytesIO()
         joblib.dump({"model": st.session_state.get("reg_models")[list(st.session_state.get("reg_models").keys())[0]],
-                      "scaler": st.session_state.get("scaler_r"],
+                      "scaler": st.session_state.get("scaler_r"),
                       "features": st.session_state.get("feat_names"]}, buf)
         st.download_button("⬇️ Download best model (pkl)",
                             buf.getvalue(),
@@ -1460,7 +1460,7 @@ with tab12:
 
                 # ── Regression prediction ────────────────────────────────────
                 if have_reg:
-                    row_scaled_r = st.session_state.get("scaler_r"].transform(
+                    row_scaled_r = st.session_state.get("scaler_r").transform(
                         row_df[feat_names].values)
                     pred_price   = st.session_state.get("reg_models")[sel_pred_r].predict(
                         row_scaled_r)[0]
@@ -1558,7 +1558,7 @@ with tab12:
 
                         # Regression
                         if have_reg:
-                            X_b_r = st.session_state.get("scaler_r"].transform(X_batch)
+                            X_b_r = st.session_state.get("scaler_r").transform(X_batch)
                             df_out["Predicted_Price"] = \
                                 st.session_state.get("reg_models")[sel_pred_r].predict(X_b_r)
 
