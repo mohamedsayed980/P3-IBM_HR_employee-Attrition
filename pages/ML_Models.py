@@ -794,7 +794,7 @@ with tab9:
                 path = os.path.join(save_dir, f"{model_to_save.replace(' ','_')}_reg.pkl")
                 joblib.dump({"model": st.session_state.get("reg_models")[model_to_save],
                               "scaler": st.session_state.get("scaler_r"),
-                              "features": st.session_state.get("feat_names"],
+                              "features": st.session_state.get("feat_names"),
                               "target": st.session_state.get("target_col"],
                               "metrics": st.session_state.get("reg_results")[model_to_save]},
                              path)
@@ -804,7 +804,7 @@ with tab9:
         buf = io.BytesIO()
         joblib.dump({"model": st.session_state.get("reg_models")[list(st.session_state.get("reg_models").keys())[0]],
                       "scaler": st.session_state.get("scaler_r"),
-                      "features": st.session_state.get("feat_names"]}, buf)
+                      "features": st.session_state.get("feat_names")}, buf)
         st.download_button("⬇️ Download best model (pkl)",
                             buf.getvalue(),
                             file_name=f"{best_n.replace(' ','_')}_reg.pkl",
@@ -979,7 +979,7 @@ with tab10:
                                f"{chosen_c} — Confusion Matrix"))
         with c2:
             st.pyplot(plot_feature_importance(r_cdive["model"],
-                                               st.session_state.get("feat_names"],
+                                               st.session_state.get("feat_names"),
                                                f"{chosen_c} — Feature Importance",
                                                CLR["purple"]))
         # Classification report
@@ -1047,7 +1047,7 @@ with tab10:
                 joblib.dump({"model"   : st.session_state.get("cls_models")[model_to_save_c],
                               "scaler"  : st.session_state.get("scaler_c"],
                               "le"      : st.session_state.get("le"],
-                              "features": st.session_state.get("feat_names"],
+                              "features": st.session_state.get("feat_names"),
                               "metrics" : st.session_state.get("reg_results")[model_to_save_c]},
                              path_c)
                 st.success(f"Saved → `{path_c}`")
@@ -1056,7 +1056,7 @@ with tab10:
         joblib.dump({"model"   : st.session_state.get("cls_models")[best_cn],
                       "scaler"  : st.session_state.get("scaler_c"],
                       "le"      : st.session_state.get("le"],
-                      "features": st.session_state.get("feat_names"]}, buf_c)
+                      "features": st.session_state.get("feat_names")}, buf_c)
         st.download_button("⬇️ Download best classifier (pkl)",
                             buf_c.getvalue(),
                             file_name=f"{best_cn.replace(' ','_')}_cls.pkl",
@@ -1430,7 +1430,7 @@ with tab12:
 
         # ── 12.1 SINGLE ROW PREDICTION ───────────────────────────────────────
         section("🎯 Single-Row Prediction")
-        feat_names = st.session_state.get("feat_names"]
+        feat_names = st.session_state.get("feat_names")
 
         if st.session_state.df_raw is not None and feat_names:
             ref_df = df_global[feat_names].describe()
