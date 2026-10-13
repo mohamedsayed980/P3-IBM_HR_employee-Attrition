@@ -138,11 +138,11 @@ with col_target:
             st.session_state.target_col = target
 
 with col_thresh:
-             thresh = st.slider("Correlation Threshold",
+            thresh = st.slider("Correlation Threshold",
                            0.10, 0.90,
                            float(st.session_state.corr_threshold),
                            0.05)
-        st.session_state.corr_threshold = thresh
+            st.session_state.corr_threshold = thresh
 
 with col_info:  
           if st.session_state.df_raw is not None:
