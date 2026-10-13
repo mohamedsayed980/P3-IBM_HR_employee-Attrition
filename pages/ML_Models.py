@@ -1045,7 +1045,7 @@ with tab10:
                 path_c = os.path.join(save_dir,
                              f"{model_to_save_c.replace(' ','_')}_cls.pkl")
                 joblib.dump({"model"   : st.session_state.get("cls_models")[model_to_save_c],
-                              "scaler"  : st.session_state.get("scaler_c"],
+                              "scaler"  : st.session_state.get("scaler_c"),
                               "le"      : st.session_state.get("le"],
                               "features": st.session_state.get("feat_names"),
                               "metrics" : st.session_state.get("reg_results")[model_to_save_c]},
@@ -1054,8 +1054,8 @@ with tab10:
 
         buf_c = io.BytesIO()
         joblib.dump({"model"   : st.session_state.get("cls_models")[best_cn],
-                      "scaler"  : st.session_state.get("scaler_c"],
-                      "le"      : st.session_state.get("le"],
+                      "scaler"  : st.session_state.get("scaler_c"),
+                      "le"      : st.session_state.get("le"),
                       "features": st.session_state.get("feat_names")}, buf_c)
         st.download_button("⬇️ Download best classifier (pkl)",
                             buf_c.getvalue(),
@@ -1482,9 +1482,9 @@ with tab12:
                         proba = st.session_state.get("cls_models")[sel_pred_c].predict_proba(
                             row_scaled_c)[0]
                         conf  = proba.max() * 100
-                        st.session_state.get("_last_pred_conf"] = conf
+                        st.session_state.get("_last_pred_conf") = conf
                     else:
-                        st.session_state.get("_last_pred_conf"] = None
+                        st.session_state.get("_last_pred_conf") = None
 
             # ── Display results ───────────────────────────────────────────────
             if "_last_pred_price" in S or "_last_pred_cat" in S:
@@ -1493,7 +1493,7 @@ with tab12:
 
                 if "_last_pred_price" in S and have_reg:
                     with res_c1:
-                        pp = st.session_state.get("_last_pred_price"]
+                        pp = st.session_state.get("_last_pred_price")
                         st.markdown(f"""
                         <div class="pred-card">
                           <div class="pred-label">📉 Regression Result
@@ -1504,7 +1504,7 @@ with tab12:
 
                 if "_last_pred_cat" in S and have_cls:
                     with res_c2:
-                        cat  = st.session_state.get("_last_pred_cat"]
+                        cat  = st.session_state.get("_last_pred_cat")
                         conf = S.get("_last_pred_conf")
                         badge_cls, icon = CAT_STYLE.get(cat, ("badge-purple","⬜"))
                         st.markdown(f"""
@@ -1564,10 +1564,10 @@ with tab12:
 
                         # Classification
                         if have_cls:
-                            X_b_c = st.session_state.get("scaler_c"].transform(X_batch)
+                            X_b_c = st.session_state.get("scaler_c").transform(X_batch)
                             enc_cats = st.session_state.get("cls_models")[sel_pred_c].predict(X_b_c)
                             df_out["Predicted_Category"] = \
-                                st.session_state.get("le"].inverse_transform(enc_cats)
+                                st.session_state.get("le").inverse_transform(enc_cats)
 
                             if hasattr(st.session_state.get("cls_models")[sel_pred_c],
                                        "predict_proba"):
@@ -1576,7 +1576,7 @@ with tab12:
                                 df_out["Confidence_%"] = \
                                     (probas.max(axis=1) * 100).round(2)
 
-                        st.session_state.get("batch_results"] = df_out
+                        st.session_state.get("batch_results") = df_out
 
                     st.success("✅ Batch prediction complete!")
 
@@ -1584,8 +1584,8 @@ with tab12:
                 st.error(f"Error reading file: {e}")
 
         # ── Display batch results ─────────────────────────────────────────────
-        if st.session_state.get("batch_results"] is not None:
-            df_out = st.session_state.get("batch_results"]
+        if st.session_state.get("batch_results") is not None:
+            df_out = st.session_state.get("batch_results")
             section("📊 Batch Results")
 
             # Summary metrics
@@ -1701,7 +1701,7 @@ with tab13:
         if S.get("important_vars"):
             lines.append(f"   Features selected : {len(S['important_vars'])}")
             lines.append(f"   {', '.join(S['important_vars'][:8])}"
-                         + (" …" if len(st.session_state.get("important_vars"]) > 8 else ""))
+                         + (" …" if len(st.session_state.get("important_vars")) > 8 else ""))
 
         # ── Section 2: EDA Insights from Stage 1 ─────────────────────────
         lines.append("")
@@ -1799,7 +1799,7 @@ with tab13:
  # ── Display ───────────────────────────────────────────────────────────────────
 if S.get("final_report_text"):
      st.text_area("📋 Final Report",
-                  value=st.session_state.get("final_report_text"],
+                  value=st.session_state.get("final_report_text"),
                   height=520,
                   key="final_report_area")
 
@@ -1812,7 +1812,7 @@ if S.get("final_report_text"):
          st.markdown("**Plain Text**")
          st.download_button(
              "📥 Download TXT",
-             data=st.session_state.get("final_report_text"],
+             data=st.session_state.get("final_report_text"),
              file_name="Final_Insights_Report.txt",
              mime="text/plain",
              key="dl_final_txt",
@@ -1838,19 +1838,19 @@ if S.get("final_report_text"):
                  # ── Styles ────────────────────────────────────────────────
                  title_style = ParagraphStyle(
                      "FinalTitle",
-                     parent=stylest.session_state.get("Title"], fontSize=20,
+                     parent=stylest.session_state.get("Title"), fontSize=20,
                      textColor=colors.HexColor("#1E3A8A"), spaceAfter=6)
                  h2_style = ParagraphStyle(
                      "FinalH2",
-                     parent=stylest.session_state.get("Heading2"], fontSize=13,
+                     parent=stylest.session_state.get("Heading2"), fontSize=13,
                      textColor=colors.HexColor("#1E3A8A"), spaceBefore=12)
                  h3_style = ParagraphStyle(
                      "FinalH3",
-                     parent=stylest.session_state.get("Heading3"], fontSize=11,
+                     parent=stylest.session_state.get("Heading3"), fontSize=11,
                      textColor=colors.HexColor("#059669"), spaceBefore=8)
                  body_style = ParagraphStyle(
                      "FinalBody",
-                     parent=stylest.session_state.get("Normal"], fontSize=9,
+                     parent=stylest.session_state.get("Normal"), fontSize=9,
                      leading=14, spaceAfter=4)
 
                  # ── Title block ───────────────────────────────────────────
@@ -1859,7 +1859,7 @@ if S.get("final_report_text"):
                  story.append(Paragraph(
                      f"ML Engine — End-to-End · "
                      f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}",
-                     stylest.session_state.get("Normal"]))
+                     stylest.session_state.get("Normal"))
                  story.append(HRFlowable(
                      width="100%", thickness=2,
                      color=colors.HexColor("#1E3A8A")))
@@ -1869,16 +1869,16 @@ if S.get("final_report_text"):
                  story.append(Paragraph("1. Dataset Summary", h2_style))
                  ds_data = [["Item", "Value"]]
                  if S.get("file_name"):
-                     ds_data.append(["File", st.session_state.get("file_name"]])
+                     ds_data.append(["File", st.session_state.get("file_name")])
                  if S.get("df_work") is not None:
-                     df_w = st.session_state.get("df_work"]
+                     df_w = st.session_state.get("df_work")
                      ds_data.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
                  if S.get("target_col"):
                      ds_data.append(["Target", st.session_state.get("target_col")])
                  if S.get("important_vars"):
                      ds_data.append(["Features selected",
-                         str(len(st.session_state.get("important_vars"]))])
+                         str(len(st.session_state.get("important_vars")))]
                  ds_tbl = Table(ds_data, colWidths=[2*inch, 4*inch])
                  ds_tbl.setStyle(TableStyle([
                      ("BACKGROUND", (0,0), (-1,0),
@@ -2069,16 +2069,16 @@ if S.get("final_report_text"):
                  wd_doc.add_heading("1. Dataset Summary", 1)
                  ds_rows = []
                  if S.get("file_name"):
-                     ds_rows.append(["File", st.session_state.get("file_name"]])
+                     ds_rows.append(["File", st.session_state.get("file_name")])
                  if S.get("df_work") is not None:
-                     df_w = st.session_state.get("df_work"]
+                     df_w = st.session_state.get("df_work")
                      ds_rows.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
                  if S.get("target_col"):
                      ds_rows.append(["Target", st.session_state.get("target_col")])
                  if S.get("important_vars"):
                      ds_rows.append(["Features selected",
-                         str(len(st.session_state.get("important_vars"]))])
+                         str(len(st.session_state.get("important_vars")))])
                  if ds_rows:
                      add_table_13(wd_doc, ds_rows, ["Item", "Value"])
                  wd_doc.add_paragraph()
