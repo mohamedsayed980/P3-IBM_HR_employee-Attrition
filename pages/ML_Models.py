@@ -893,8 +893,8 @@ with tab10:
 
         if use_parallel_c:
             args_list2 = [(n, CLS_MODELS[n],
-                           st.session_state.get("X_train_c"], st.session_state.get("X_test_c"],
-                           st.session_state.get("y_train_c"],  st.session_state.get("y_test_c"])
+                           st.session_state.get("X_train_c"), st.session_state.get("X_test_c"],
+                           st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"])
                           for n in sel_models_c]
             with concurrent.futures.ThreadPoolExecutor() as exe:
                 futs2 = {exe.submit(_train_one_cls, a): a[0] for a in args_list2}
@@ -912,8 +912,8 @@ with tab10:
             for i, name in enumerate(sel_models_c):
                 status2.info(f"Training {name} …")
                 _, res, err = _train_one_cls((name, CLS_MODELS[name],
-                                              st.session_state.get("X_train_c"], st.session_state.get("X_test_c"],
-                                              st.session_state.get("y_train_c"],  st.session_state.get("y_test_c"]))
+                                              st.session_state.get("X_train_c"), st.session_state.get("X_test_c"],
+                                              st.session_state.get("y_train_c"),  st.session_state.get("y_test_c"]))
                 progress2.progress((i + 1) / len(sel_models_c),
                                     text=f"✅ {name}")
                 if err:
@@ -1008,7 +1008,7 @@ with tab10:
             with st.spinner("Computing …"):
                 fig_lcc = plot_learning_curve(
                     r_cdive["model"],
-                    st.session_state.get("X_train_c"], st.session_state.get("y_train_c"],
+                    st.session_state.get("X_train_c"), st.session_state.get("y_train_c"),
                     "cls", f"{chosen_c} — Learning Curve")
                 st.pyplot(fig_lcc)
 
