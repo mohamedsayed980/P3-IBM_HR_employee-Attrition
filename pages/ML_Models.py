@@ -795,7 +795,7 @@ with tab9:
                 joblib.dump({"model": st.session_state.get("reg_models")[model_to_save],
                               "scaler": st.session_state.get("scaler_r"),
                               "features": st.session_state.get("feat_names"),
-                              "target": st.session_state.get("target_col"],
+                              "target": st.session_state.get("target_col"),
                               "metrics": st.session_state.get("reg_results")[model_to_save]},
                              path)
                 st.success(f"Saved → `{path}`")
@@ -1875,7 +1875,7 @@ if S.get("final_report_text"):
                      ds_data.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
                  if S.get("target_col"):
-                     ds_data.append(["Target", st.session_state.get("target_col"]])
+                     ds_data.append(["Target", st.session_state.get("target_col")])
                  if S.get("important_vars"):
                      ds_data.append(["Features selected",
                          str(len(st.session_state.get("important_vars"]))])
@@ -2075,7 +2075,7 @@ if S.get("final_report_text"):
                      ds_rows.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
                  if S.get("target_col"):
-                     ds_rows.append(["Target", st.session_state.get("target_col"]])
+                     ds_rows.append(["Target", st.session_state.get("target_col")])
                  if S.get("important_vars"):
                      ds_rows.append(["Features selected",
                          str(len(st.session_state.get("important_vars"]))])
