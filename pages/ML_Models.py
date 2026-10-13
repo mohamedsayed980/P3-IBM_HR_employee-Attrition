@@ -1465,7 +1465,7 @@ with tab12:
                         row_df[feat_names].values)
                     pred_price   = st.session_state.get("reg_models")[sel_pred_r].predict(
                         row_scaled_r)[0]
-                    st.session_state.get("_last_pred_price"] = pred_price
+                    st.session_state.get("_last_pred_price") = pred_price
                     st.session_state.get("_last_pred_model_r"] = sel_pred_r
 
                 # ── Classification prediction ────────────────────────────────
