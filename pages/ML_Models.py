@@ -749,7 +749,7 @@ with tab9:
 
         c3, c4 = st.columns(2)
         with c3:
-            st.pyplot(plot_feature_importance(model, st.session_state.get("feat_names"],
+            st.pyplot(plot_feature_importance(model, st.session_state.get("feat_names"),
                                                f"{chosen_r} — Feature Importance"))
         with c4:
             if st.checkbox("Show learning curve", key="lc_r"):
