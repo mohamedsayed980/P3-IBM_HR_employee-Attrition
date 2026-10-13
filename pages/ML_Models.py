@@ -684,7 +684,7 @@ with tab9:
                     results[name] = res
 
         st.session_state.get("reg_results").update(results)
-        st.session_state.get("reg_models"].update({n: r["model"] for n, r in results.items()})
+        st.session_state.get("reg_models").update({n: r["model"] for n, r in results.items()})
         best = max(results, key=lambda k: results[k]["r2"])
         st.session_state.get("best_reg_name"] = best
         update_stage2_insights()
@@ -786,13 +786,13 @@ with tab9:
         col_sv1, col_sv2 = st.columns(2)
         with col_sv1:
             model_to_save = st.selectbox("Model to save",
-                                          list(st.session_state.get("reg_models"].keys()),
+                                          list(st.session_state.get("reg_models").keys()),
                                           key="save_r_sel")
         with col_sv2:
             if st.button("💾 Save to disk", key="save_r_btn"):
                 os.makedirs(save_dir, exist_ok=True)
                 path = os.path.join(save_dir, f"{model_to_save.replace(' ','_')}_reg.pkl")
-                joblib.dump({"model": st.session_state.get("reg_models"][model_to_save],
+                joblib.dump({"model": st.session_state.get("reg_models")[model_to_save],
                               "scaler": st.session_state.get("scaler_r"],
                               "features": st.session_state.get("feat_names"],
                               "target": st.session_state.get("target_col"],
@@ -802,7 +802,7 @@ with tab9:
 
         # In-memory download
         buf = io.BytesIO()
-        joblib.dump({"model": st.session_state.get("reg_models"][list(st.session_state.get("reg_models"].keys())[0]],
+        joblib.dump({"model": st.session_state.get("reg_models")[list(st.session_state.get("reg_models").keys())[0]],
                       "scaler": st.session_state.get("scaler_r"],
                       "features": st.session_state.get("feat_names"]}, buf)
         st.download_button("⬇️ Download best model (pkl)",
@@ -864,7 +864,7 @@ with tab10:
         if st.button("🗑️ Clear Results", use_container_width=True,
                      key="clr_c_btn"):
             st.session_state.get("reg_results") = {}
-            st.session_state.get("cls_models"]  = {}
+            st.session_state.get("cls_models")  = {}
             st.rerun()
 #-------------------------------------------------
 # ── CPU sidebar display ──────────────────────────────────────────────────
@@ -922,7 +922,7 @@ with tab10:
                     results2[name] = res
 
         st.session_state.get("reg_results").update(results2)
-        st.session_state.get("cls_models"].update({n: r["model"] for n, r in results2.items()})
+        st.session_state.get("cls_models").update({n: r["model"] for n, r in results2.items()})
         best_c = max(results2, key=lambda k: results2[k]["acc"])
         st.session_state.get("best_cls_name"] = best_c
         update_stage2_insights()
@@ -1037,14 +1037,14 @@ with tab10:
         col_sv3, col_sv4 = st.columns(2)
         with col_sv3:
             model_to_save_c = st.selectbox("Classifier to save",
-                                            list(st.session_state.get("cls_models"].keys()),
+                                            list(st.session_state.get("cls_models").keys()),
                                             key="save_c_sel")
         with col_sv4:
             if st.button("💾 Save to disk", key="save_c_btn"):
                 os.makedirs(save_dir, exist_ok=True)
                 path_c = os.path.join(save_dir,
                              f"{model_to_save_c.replace(' ','_')}_cls.pkl")
-                joblib.dump({"model"   : st.session_state.get("cls_models"][model_to_save_c],
+                joblib.dump({"model"   : st.session_state.get("cls_models")[model_to_save_c],
                               "scaler"  : st.session_state.get("scaler_c"],
                               "le"      : st.session_state.get("le"],
                               "features": st.session_state.get("feat_names"],
@@ -1053,7 +1053,7 @@ with tab10:
                 st.success(f"Saved → `{path_c}`")
 
         buf_c = io.BytesIO()
-        joblib.dump({"model"   : st.session_state.get("cls_models"][best_cn],
+        joblib.dump({"model"   : st.session_state.get("cls_models")[best_cn],
                       "scaler"  : st.session_state.get("scaler_c"],
                       "le"      : st.session_state.get("le"],
                       "features": st.session_state.get("feat_names"]}, buf_c)
@@ -1403,8 +1403,8 @@ with tab11:
 with tab12:
     st.markdown("## 🔮 Predict New Data")
 
-    have_reg = bool(st.session_state.get("reg_models"])
-    have_cls = bool(st.session_state.get("cls_models"])
+    have_reg = bool(st.session_state.get("reg_models"))
+    have_cls = bool(st.session_state.get("cls_models"))
 
     if not have_reg and not have_cls:
         st.markdown('<div class="warning-box">⚠️ No models trained yet. '
@@ -1421,12 +1421,12 @@ with tab12:
             if have_reg:
                 sel_pred_r = st.selectbox(
                     "Regression model",
-                    list(st.session_state.get("reg_models"].keys()), key="pred_r_sel")
+                    list(st.session_state.get("reg_models").keys()), key="pred_r_sel")
         with col_ms2:
             if have_cls:
                 sel_pred_c = st.selectbox(
                     "Classification model",
-                    list(st.session_state.get("cls_models"].keys()), key="pred_c_sel")
+                    list(st.session_state.get("cls_models").keys()), key="pred_c_sel")
 
         # ── 12.1 SINGLE ROW PREDICTION ───────────────────────────────────────
         section("🎯 Single-Row Prediction")
@@ -1462,7 +1462,7 @@ with tab12:
                 if have_reg:
                     row_scaled_r = st.session_state.get("scaler_r"].transform(
                         row_df[feat_names].values)
-                    pred_price   = st.session_state.get("reg_models"][sel_pred_r].predict(
+                    pred_price   = st.session_state.get("reg_models")[sel_pred_r].predict(
                         row_scaled_r)[0]
                     st.session_state.get("_last_pred_price"] = pred_price
                     st.session_state.get("_last_pred_model_r"] = sel_pred_r
@@ -1471,15 +1471,15 @@ with tab12:
                 if have_cls:
                     row_scaled_c = st.session_state.get("scaler_c"].transform(
                         row_df[feat_names].values)
-                    pred_cat_enc = st.session_state.get("cls_models"][sel_pred_c].predict(
+                    pred_cat_enc = st.session_state.get("cls_models")[sel_pred_c].predict(
                         row_scaled_c)[0]
                     pred_cat     = st.session_state.get("le"].inverse_transform([pred_cat_enc])[0]
                     st.session_state.get("_last_pred_cat"]   = pred_cat
                     st.session_state.get("_last_pred_model_c"] = sel_pred_c
 
                     # Confidence
-                    if hasattr(st.session_state.get("cls_models"][sel_pred_c], "predict_proba"):
-                        proba = st.session_state.get("cls_models"][sel_pred_c].predict_proba(
+                    if hasattr(st.session_state.get("cls_models")[sel_pred_c], "predict_proba"):
+                        proba = st.session_state.get("cls_models")[sel_pred_c].predict_proba(
                             row_scaled_c)[0]
                         conf  = proba.max() * 100
                         st.session_state.get("_last_pred_conf"] = conf
@@ -1560,18 +1560,18 @@ with tab12:
                         if have_reg:
                             X_b_r = st.session_state.get("scaler_r"].transform(X_batch)
                             df_out["Predicted_Price"] = \
-                                st.session_state.get("reg_models"][sel_pred_r].predict(X_b_r)
+                                st.session_state.get("reg_models")[sel_pred_r].predict(X_b_r)
 
                         # Classification
                         if have_cls:
                             X_b_c = st.session_state.get("scaler_c"].transform(X_batch)
-                            enc_cats = st.session_state.get("cls_models"][sel_pred_c].predict(X_b_c)
+                            enc_cats = st.session_state.get("cls_models")[sel_pred_c].predict(X_b_c)
                             df_out["Predicted_Category"] = \
                                 st.session_state.get("le"].inverse_transform(enc_cats)
 
-                            if hasattr(st.session_state.get("cls_models"][sel_pred_c],
+                            if hasattr(st.session_state.get("cls_models")[sel_pred_c],
                                        "predict_proba"):
-                                probas = st.session_state.get("cls_models"][sel_pred_c]\
+                                probas = st.session_state.get("cls_models")[sel_pred_c]\
                                              .predict_proba(X_b_c)
                                 df_out["Confidence_%"] = \
                                     (probas.max(axis=1) * 100).round(2)
