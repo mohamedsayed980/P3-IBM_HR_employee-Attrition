@@ -1225,7 +1225,7 @@ with tab11:
                     story.append(Paragraph("ML Models Engine — Report", title_style))
                     story.append(Paragraph(
                         f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}",
-                        stylest.session_state.get("Normal")))
+                        stylest.session_state.get("Normal"))
                     story.append(HRFlowable(width="100%", thickness=1,
                                              color=colors.HexColor("#2563EB")))
                     story.append(Spacer(1, .2*inch))
