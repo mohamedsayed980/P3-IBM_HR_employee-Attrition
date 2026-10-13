@@ -1220,7 +1220,7 @@ with tab11:
 
                     # Title
                     title_style = ParagraphStyle("Title2",
-                        parent=stylest.session_state.get("Title"], fontSize=20,
+                        parent=stylest.session_state.get("Title"), fontSize=20,
                         textColor=colors.HexColor("#1E3A8A"), spaceAfter=6)
                     story.append(Paragraph("ML Models Engine — Report", title_style))
                     story.append(Paragraph(
