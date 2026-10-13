@@ -63,7 +63,8 @@ with st.container():
 with col_load:
             # auto-loader code ✅
 
-with col_target:    # ← THIS must exist!
+with col_target:
+                # ← THIS must exist!
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
             default_idx = cols.index("Attrition_flag") \
