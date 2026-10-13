@@ -470,18 +470,18 @@ def update_stage2_insights():
              "📊  STAGE 2 — ML MODEL RESULTS",
              f"Generated: {datetime.datetime.now():%Y-%m-%d  %H:%M}",
              "=" * 60]
-    if st.session_state.get("reg_results"]:
-        best = max(st.session_state.get("reg_results"], key=lambda k: st.session_state.get("reg_results"][k]["r2"])
-        r    = st.session_state.get("reg_results"][best]
+    if st.session_state.get("reg_results"):
+        best = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
+        r    = st.session_state.get("reg_results")[best]
         lines += ["", "── REGRESSION ──",
                   f"Best Model  : {best}",
                   f"R²          : {r['r2']:.4f}",
                   f"MAE         : {r['mae']:,.0f}",
                   f"RMSE        : {r['rmse']:,.0f}",
                   f"CV R² mean  : {r['cv_mean']:.4f} ± {r['cv_std']:.4f}"]
-    if st.session_state.get("cls_results"]:
-        best = max(st.session_state.get("cls_results"], key=lambda k: st.session_state.get("cls_results"][k]["acc"])
-        r    = st.session_state.get("cls_results"][best]
+    if st.session_state.get("reg_results"):
+        best = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
+        r    = st.session_state.get("reg_results")[best]
         lines += ["", "── CLASSIFICATION ──",
                   f"Best Model  : {best}",
                   f"Accuracy    : {r['acc']*100:.2f}%",
@@ -616,8 +616,8 @@ with tab9:
     with col_clr:
         if st.button("🗑️ Clear Results", use_container_width=True,
                      key="clr_r_btn"):
-            st.session_state.get("reg_results"] = {}
-            st.session_state.get("reg_models"]  = {}
+            st.session_state.get("reg_results") = {}
+            st.session_state.get("reg_models")  = {}
             st.rerun()
 #--------------------------------------------------------------------
 # ── CPU sidebar display ──────────────────────────────────────────────────
@@ -683,7 +683,7 @@ with tab9:
                 else:
                     results[name] = res
 
-        st.session_state.get("reg_results"].update(results)
+        st.session_state.get("reg_results").update(results)
         st.session_state.get("reg_models"].update({n: r["model"] for n, r in results.items()})
         best = max(results, key=lambda k: results[k]["r2"])
         st.session_state.get("best_reg_name"] = best
@@ -694,12 +694,12 @@ with tab9:
 #---------------------------------------------------------------------------
 
     # ── 9.5 Results dashboard ───────────────────────────────────────────────
-    if st.session_state.get("reg_results"]:
+    if st.session_state.get("reg_results"):
         section("📊 Results Overview")
 
         # Summary table
         rows = []
-        for name, r in st.session_state.get("reg_results"].items():
+        for name, r in st.session_state.get("reg_results").items():
             rows.append({"Model": name,
                           "R²"   : f"{r['r2']:.4f}",
                           "MAE"  : f"{r['mae']:,.0f}",
@@ -709,8 +709,8 @@ with tab9:
         st.dataframe(df_sum, use_container_width=True, hide_index=True)
 
         # Best model metric cards
-        best_n = max(st.session_state.get("reg_results"], key=lambda k: st.session_state.get("reg_results"][k]["r2"])
-        best_r = st.session_state.get("reg_results"][best_n]
+        best_n = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
+        best_r = st.session_state.get("reg_results")[best_n]
         st.markdown(f"**🏆 Best Model: {best_n}**")
         c1, c2, c3, c4 = st.columns(4)
         c1.markdown(metric_card("R² Score",
@@ -734,8 +734,8 @@ with tab9:
         # ── 9.6 Per-model deep dive ─────────────────────────────────────────
         section("🔍 Per-Model Analysis")
         chosen_r = st.selectbox("Select model for deep dive",
-                                 list(st.session_state.get("reg_results"].keys()), key="dive_r")
-        r_dive = st.session_state.get("reg_results"][chosen_r]
+                                 list(st.session_state.get("reg_results").keys()), key="dive_r")
+        r_dive = st.session_state.get("reg_results")[chosen_r]
         model  = r_dive["model"]
         y_pr   = r_dive["y_pred"]
         y_te   = st.session_state.get("y_test_r"].values
@@ -761,8 +761,8 @@ with tab9:
 
         # ── 9.7 R² bar comparison ───────────────────────────────────────────
         section("📈 R² Comparison — All Models")
-        names_r = list(st.session_state.get("reg_results"].keys())
-        vals_r  = [st.session_state.get("reg_results"][n]["r2"] for n in names_r]
+        names_r = list(st.session_state.get("reg_results").keys())
+        vals_r  = [st.session_state.get("reg_results")[n]["r2"] for n in names_r]
         colours_r = [CLR["success"] if v >= .85
                      else (CLR["primary"] if v >= .70 else CLR["warning"])
                      for v in vals_r]
@@ -796,7 +796,7 @@ with tab9:
                               "scaler": st.session_state.get("scaler_r"],
                               "features": st.session_state.get("feat_names"],
                               "target": st.session_state.get("target_col"],
-                              "metrics": st.session_state.get("reg_results"][model_to_save]},
+                              "metrics": st.session_state.get("reg_results")[model_to_save]},
                              path)
                 st.success(f"Saved → `{path}`")
 
@@ -863,7 +863,7 @@ with tab10:
     with col_clr2:
         if st.button("🗑️ Clear Results", use_container_width=True,
                      key="clr_c_btn"):
-            st.session_state.get("cls_results"] = {}
+            st.session_state.get("reg_results") = {}
             st.session_state.get("cls_models"]  = {}
             st.rerun()
 #-------------------------------------------------
@@ -921,7 +921,7 @@ with tab10:
                 else:
                     results2[name] = res
 
-        st.session_state.get("cls_results"].update(results2)
+        st.session_state.get("reg_results").update(results2)
         st.session_state.get("cls_models"].update({n: r["model"] for n, r in results2.items()})
         best_c = max(results2, key=lambda k: results2[k]["acc"])
         st.session_state.get("best_cls_name"] = best_c
@@ -931,10 +931,10 @@ with tab10:
         st.success(f"🏆 Best classifier: **{best_c}**  —  Acc = {results2[best_c]['acc']*100:.2f}%")
 
     # ── 10.4 Results ─────────────────────────────────────────────────────────
-    if st.session_state.get("cls_results"]:
+    if st.session_state.get("reg_results"):
         section("📊 Results Overview")
         rows2 = []
-        for name, r in st.session_state.get("cls_results"].items():
+        for name, r in st.session_state.get("reg_results").items():
             rows2.append({"Model"    : name,
                            "Accuracy" : f"{r['acc']*100:.2f}%",
                            "F1"       : f"{r['f1']:.4f}",
@@ -945,8 +945,8 @@ with tab10:
         df_sum2 = pd.DataFrame(rows2).sort_values("Accuracy", ascending=False)
         st.dataframe(df_sum2, use_container_width=True, hide_index=True)
 
-        best_cn = max(st.session_state.get("cls_results"], key=lambda k: st.session_state.get("cls_results"][k]["acc"])
-        best_cr = st.session_state.get("cls_results"][best_cn]
+        best_cn = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
+        best_cr = st.session_state.get("reg_results")[best_cn]
         st.markdown(f"**🏆 Best Classifier: {best_cn}**")
         c1, c2, c3, c4 = st.columns(4)
         c1.markdown(metric_card("Accuracy",
@@ -969,8 +969,8 @@ with tab10:
         # ── 10.5 Per-classifier deep dive ────────────────────────────────────
         section("🔍 Per-Classifier Analysis")
         chosen_c = st.selectbox("Select classifier",
-                                  list(st.session_state.get("cls_results"].keys()), key="dive_c")
-        r_cdive  = st.session_state.get("cls_results"][chosen_c]
+                                  list(st.session_state.get("reg_results").keys()), key="dive_c")
+        r_cdive  = st.session_state.get("reg_results")[chosen_c]
         le_inv   = [str(c) for c in st.session_state.get("le"].classes_]  # must be strings for classification_report
 
         c1, c2 = st.columns(2)
@@ -1014,8 +1014,8 @@ with tab10:
 
         # ── 10.6 Accuracy bar comparison ─────────────────────────────────────
         section("📊 Accuracy Comparison — All Classifiers")
-        names_c = list(st.session_state.get("cls_results"].keys())
-        vals_c  = [st.session_state.get("cls_results"][n]["acc"] for n in names_c]
+        names_c = list(st.session_state.get("reg_results").keys())
+        vals_c  = [st.session_state.get("reg_results")[n]["acc"] for n in names_c]
         colours_c = [CLR["success"] if v >= .85
                      else (CLR["primary"] if v >= .70 else CLR["warning"])
                      for v in vals_c]
@@ -1048,7 +1048,7 @@ with tab10:
                               "scaler"  : st.session_state.get("scaler_c"],
                               "le"      : st.session_state.get("le"],
                               "features": st.session_state.get("feat_names"],
-                              "metrics" : st.session_state.get("cls_results"][model_to_save_c]},
+                              "metrics" : st.session_state.get("reg_results")[model_to_save_c]},
                              path_c)
                 st.success(f"Saved → `{path_c}`")
 
@@ -1070,8 +1070,8 @@ with tab10:
 with tab11:
     st.markdown("## 📊 Model Comparison & Reports")
 
-    have_r = bool(st.session_state.get("reg_results"])
-    have_c = bool(st.session_state.get("cls_results"])
+    have_r = bool(st.session_state.get("reg_results"))
+    have_c = bool(st.session_state.get("reg_results"))
 
     if not have_r and not have_c:
         st.markdown('<div class="warning-box">⚠️ Train models in Tab 9 and/or '
@@ -1082,8 +1082,8 @@ with tab11:
         col_r, col_c = st.columns(2)
 
         if have_r:
-            best_rn = max(st.session_state.get("reg_results"], key=lambda k: st.session_state.get("reg_results"][k]["r2"])
-            br      = st.session_state.get("reg_results"][best_rn]
+            best_rn = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
+            br      = st.session_state.get("reg_results")[best_rn]
             with col_r:
                 st.markdown(f"""
                 <div class="pred-card">
@@ -1105,8 +1105,8 @@ with tab11:
                 </div>""", unsafe_allow_html=True)
 
         if have_c:
-            best_cn2 = max(st.session_state.get("cls_results"], key=lambda k: st.session_state.get("cls_results"][k]["acc"])
-            bc       = st.session_state.get("cls_results"][best_cn2]
+            best_cn2 = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
+            bc       = st.session_state.get("reg_results")[best_cn2]
             with col_c:
                 st.markdown(f"""
                 <div class="pred-card">
@@ -1133,8 +1133,8 @@ with tab11:
             fig_dual, (ax_l, ax_r) = plt.subplots(1, 2, figsize=(13, 4))
 
             # Regression — R²
-            rns  = list(st.session_state.get("reg_results"].keys())
-            rvs  = [st.session_state.get("reg_results"][n]["r2"] for n in rns]
+            rns  = list(st.session_state.get("reg_results").keys())
+            rvs  = [st.session_state.get("reg_results")[n]["r2"] for n in rns]
             rcls = [CLR["success"] if v >= .85
                     else (CLR["primary"] if v >= .70 else CLR["warning"])
                     for v in rvs]
@@ -1146,8 +1146,8 @@ with tab11:
             ax_l.spines[["top","right"]].set_visible(False)
 
             # Classification — Accuracy
-            cns  = list(st.session_state.get("cls_results"].keys())
-            cvs  = [st.session_state.get("cls_results"][n]["acc"] for n in cns]
+            cns  = list(st.session_state.get("reg_results").keys())
+            cvs  = [st.session_state.get("reg_results")[n]["acc"] for n in cns]
             ccls = [CLR["success"] if v >= .85
                     else (CLR["primary"] if v >= .70 else CLR["warning"])
                     for v in cvs]
@@ -1169,7 +1169,7 @@ with tab11:
                  "MAE": f"{r['mae']:,.0f}", "RMSE": f"{r['rmse']:,.0f}",
                  "CV R² mean": f"{r['cv_mean']:.4f}",
                  "CV R² std": f"{r['cv_std']:.4f}"}
-                for n, r in st.session_state.get("reg_results"].items()
+                for n, r in st.session_state.get("reg_results").items()
             ]).sort_values("R²", ascending=False)
             st.dataframe(df_r_full, use_container_width=True, hide_index=True)
 
@@ -1182,7 +1182,7 @@ with tab11:
                  "Recall": f"{r['recall']:.4f}",
                  "CV Acc mean": f"{r['cv_mean']*100:.2f}%",
                  "CV Acc std": f"{r['cv_std']*100:.2f}%"}
-                for n, r in st.session_state.get("cls_results"].items()
+                for n, r in st.session_state.get("reg_results").items()
             ]).sort_values("Accuracy", ascending=False)
             st.dataframe(df_c_full, use_container_width=True, hide_index=True)
 
@@ -1238,7 +1238,7 @@ with tab11:
                     if have_r:
                         story.append(Paragraph("Regression Results", h2_style))
                         t_data = [["Model","R²","MAE","RMSE","CV R²"]]
-                        for n, r in st.session_state.get("reg_results"].items():
+                        for n, r in st.session_state.get("reg_results").items():
                             t_data.append([n, f"{r['r2']:.4f}",
                                            f"{r['mae']:,.0f}",
                                            f"{r['rmse']:,.0f}",
@@ -1265,7 +1265,7 @@ with tab11:
                         story.append(Paragraph("Classification Results", h2_style))
                         t_data2 = [["Model","Accuracy","F1","Precision",
                                     "Recall","CV Acc"]]
-                        for n, r in st.session_state.get("cls_results"].items():
+                        for n, r in st.session_state.get("reg_results").items():
                             t_data2.append([n,
                                             f"{r['acc']*100:.2f}%",
                                             f"{r['f1']:.4f}",
@@ -1340,7 +1340,7 @@ with tab11:
                                      f"{r['mae']:,.0f}",
                                      f"{r['rmse']:,.0f}",
                                      f"{r['cv_mean']:.4f}"]
-                                    for n, r in st.session_state.get("reg_results"].items()]
+                                    for n, r in st.session_state.get("reg_results").items()]
                         add_table(wd_doc, reg_rows,
                                   ["Model","R²","MAE","RMSE","CV R²"])
                         wd_doc.add_paragraph()
@@ -1352,7 +1352,7 @@ with tab11:
                                      f"{r['f1']:.4f}",
                                      f"{r['precision']:.4f}",
                                      f"{r['recall']:.4f}"]
-                                    for n, r in st.session_state.get("cls_results"].items()]
+                                    for n, r in st.session_state.get("reg_results").items()]
                         add_table(wd_doc, cls_rows,
                                   ["Model","Accuracy","F1","Precision","Recall"])
                         wd_doc.add_paragraph()
@@ -1378,7 +1378,7 @@ with tab11:
             df_r_csv = pd.DataFrame([
                 {"Model":n,"R²":r["r2"],"MAE":r["mae"],"RMSE":r["rmse"],
                  "CV_R2_mean":r["cv_mean"],"CV_R2_std":r["cv_std"]}
-                for n,r in st.session_state.get("reg_results"].items()])
+                for n,r in st.session_state.get("reg_results").items()])
             with col_csv1:
                 st.download_button("⬇️ Regression CSV",
                                     df_r_csv.to_csv(index=False),
@@ -1389,7 +1389,7 @@ with tab11:
                 {"Model":n,"Accuracy":r["acc"],"F1":r["f1"],
                  "Precision":r["precision"],"Recall":r["recall"],
                  "CV_Acc_mean":r["cv_mean"],"CV_Acc_std":r["cv_std"]}
-                for n,r in st.session_state.get("cls_results"].items()])
+                for n,r in st.session_state.get("reg_results").items()])
             with col_csv2:
                 st.download_button("⬇️ Classification CSV",
                                     df_c_csv.to_csv(index=False),
@@ -1725,7 +1725,7 @@ with tab13:
         lines.append("3. REGRESSION MODEL RESULTS  (Stage 2)")
         lines.append("─" * 45)
         if S.get("reg_results"):
-            sorted_reg = sorted(st.session_state.get("reg_results"].items(),
+            sorted_reg = sorted(st.session_state.get("reg_results").items(),
                                 key=lambda x: x[1]["r2"], reverse=True)
             for rank, (name, r) in enumerate(sorted_reg, 1):
                 lines.append(f"   #{rank}  {name}")
@@ -1746,7 +1746,7 @@ with tab13:
         lines.append("4. CLASSIFICATION MODEL RESULTS  (Stage 2)")
         lines.append("─" * 45)
         if S.get("cls_results"):
-            sorted_cls = sorted(st.session_state.get("cls_results"].items(),
+            sorted_cls = sorted(st.session_state.get("reg_results").items(),
                                 key=lambda x: x[1]["acc"], reverse=True)
             for rank, (name, r) in enumerate(sorted_cls, 1):
                 lines.append(f"   #{rank}  {name}")
@@ -1773,10 +1773,10 @@ with tab13:
         lines.append("")
         lines.append("   Modelling Stage:")
         if S.get("reg_results"):
-            best_r = max(st.session_state.get("reg_results"], key=lambda k: st.session_state.get("reg_results"][k]["r2"])
+            best_r = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
             lines.append(f"   • Use {best_r} for regression tasks")
         if S.get("cls_results"):
-            best_c = max(st.session_state.get("cls_results"], key=lambda k: st.session_state.get("cls_results"][k]["acc"])
+            best_c = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
             lines.append(f"   • Use {best_c} for classification tasks")
         lines.append("   • Run Predict New Data (Tab 12) for inference")
         lines.append("   • Export model package for deployment")
@@ -1915,7 +1915,7 @@ if S.get("final_report_text"):
                  if S.get("reg_results"):
                      r_data = [["Model", "R²", "MAE", "RMSE", "CV R²"]]
                      sorted_reg = sorted(
-                         st.session_state.get("reg_results"].items(),
+                         st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["r2"], reverse=True)
                      for name, r in sorted_reg:
                          r_data.append([
@@ -1958,7 +1958,7 @@ if S.get("final_report_text"):
                      c_data = [["Model", "Accuracy", "F1",
                                 "Precision", "Recall", "CV Acc"]]
                      sorted_cls = sorted(
-                         st.session_state.get("cls_results"].items(),
+                         st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["acc"], reverse=True)
                      for name, r in sorted_cls:
                          c_data.append([
@@ -2004,12 +2004,12 @@ if S.get("final_report_text"):
                      "• Review outlier treatment (Tab 3)",
                  ]
                  if S.get("reg_results"):
-                     best_r = max(st.session_state.get("reg_results"],
-                                  key=lambda k: st.session_state.get("reg_results"][k]["r2"])
+                     best_r = max(st.session_state.get("reg_results"),
+                                  key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"• Use {best_r} for regression tasks")
                  if S.get("cls_results"):
-                     best_c = max(st.session_state.get("cls_results"],
-                                  key=lambda k: st.session_state.get("cls_results"][k]["acc"])
+                     best_c = max(st.session_state.get("reg_results"),
+                                  key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"• Use {best_c} for classification tasks")
                  recs.append("• Run Predict New Data (Tab 12) for inference")
                  for rec in recs:
@@ -2102,7 +2102,7 @@ if S.get("final_report_text"):
                      "3. Regression Model Results (Stage 2)", 1)
                  if S.get("reg_results"):
                      sorted_reg = sorted(
-                         st.session_state.get("reg_results"].items(),
+                         st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["r2"], reverse=True)
                      reg_rows = [[n,
                                   f"{r['r2']:.4f}",
@@ -2126,7 +2126,7 @@ if S.get("final_report_text"):
                      "4. Classification Model Results (Stage 2)", 1)
                  if S.get("cls_results"):
                      sorted_cls = sorted(
-                         st.session_state.get("cls_results"].items(),
+                         st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["acc"], reverse=True)
                      cls_rows = [[n,
                                   f"{r['acc']*100:.2f}%",
@@ -2155,12 +2155,12 @@ if S.get("final_report_text"):
                      "Review outlier treatment (Tab 3)",
                  ]
                  if S.get("reg_results"):
-                     best_r = max(st.session_state.get("reg_results"],
-                                  key=lambda k: st.session_state.get("reg_results"][k]["r2"])
+                     best_r = max(st.session_state.get("reg_results"),
+                                  key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"Use {best_r} for regression tasks")
                  if S.get("cls_results"):
-                     best_c = max(st.session_state.get("cls_results"],
-                                  key=lambda k: st.session_state.get("cls_results"][k]["acc"])
+                     best_c = max(st.session_state.get("reg_results"),
+                                  key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"Use {best_c} for classification tasks")
                  recs.append("Run Predict New Data (Tab 12) for inference")
                  for rec in recs:
