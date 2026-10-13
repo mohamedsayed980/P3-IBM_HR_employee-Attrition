@@ -128,7 +128,7 @@ with st.container():
 
 with col_load:
     if st.session_state.df_raw is None:
-    _auto_df = _load_auto()
+         _auto_df = _load_auto()
     if not _auto_df.empty:
         _register(_auto_df, "hr_attrition_clean.csv")
        
