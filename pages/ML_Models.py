@@ -1046,7 +1046,7 @@ with tab10:
                              f"{model_to_save_c.replace(' ','_')}_cls.pkl")
                 joblib.dump({"model"   : st.session_state.get("cls_models")[model_to_save_c],
                               "scaler"  : st.session_state.get("scaler_c"),
-                              "le"      : st.session_state.get("le"],
+                              "le"      : st.session_state.get("le"),
                               "features": st.session_state.get("feat_names"),
                               "metrics" : st.session_state.get("reg_results")[model_to_save_c]},
                              path_c)
@@ -1473,7 +1473,7 @@ with tab12:
                         row_df[feat_names].values)
                     pred_cat_enc = st.session_state.get("cls_models")[sel_pred_c].predict(
                         row_scaled_c)[0]
-                    pred_cat     = st.session_state.get("le"].inverse_transform([pred_cat_enc])[0]
+                    pred_cat     = st.session_state.get("le").inverse_transform([pred_cat_enc])[0]
                     st.session_state.get("_last_pred_cat"]   = pred_cat
                     st.session_state.get("_last_pred_model_c"] = sel_pred_c
 
