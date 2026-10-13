@@ -839,7 +839,7 @@ with tab10:
     }
 
     # ── 10.2 Prepare split ───────────────────────────────────────────────────
-    if not st.session_state.get("data_prepared_c"]:
+    if not st.session_state.get("data_prepared_c"):
         prepare_classification(df_global)
 
     # ── 10.3 Controls ────────────────────────────────────────────────────────
