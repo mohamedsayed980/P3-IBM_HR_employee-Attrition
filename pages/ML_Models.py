@@ -1470,7 +1470,7 @@ with tab12:
 
                 # ── Classification prediction ────────────────────────────────
                 if have_cls:
-                    row_scaled_c = st.session_state.get("scaler_c"].transform(
+                    row_scaled_c = st.session_state.get("scaler_c").transform(
                         row_df[feat_names].values)
                     pred_cat_enc = st.session_state.get("cls_models")[sel_pred_c].predict(
                         row_scaled_c)[0]
