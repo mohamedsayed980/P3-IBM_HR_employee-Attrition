@@ -1231,7 +1231,7 @@ with tab11:
                     story.append(Spacer(1, .2*inch))
 
                     h2_style = ParagraphStyle("H2",
-                        parent=stylest.session_state.get("Heading2"], fontSize=13,
+                        parent=stylest.session_state.get("Heading2"), fontSize=13,
                         textColor=colors.HexColor("#1E3A8A"), spaceBefore=10)
 
                     # Regression section
