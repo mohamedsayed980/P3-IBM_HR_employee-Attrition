@@ -234,11 +234,11 @@ def load_data() -> pd.DataFrame | None:
 
 # ── D5: prepare regression split ────────────────────────────────────────────
 def prepare_regression(df: pd.DataFrame):
-    target   = st.session_state.get("target_col"]
-    feats    = st.session_state.get("feat_names"] or [c for c in df.columns
+    target   = st.session_state.get("target_col")
+    feats    = st.session_state.get("feat_names") or [c for c in df.columns
                                    if c != target and
                                    pd.api.types.is_numeric_dtype(df[c])]
-    st.session_state.get("feat_names"] = feats
+    st.session_state.get("feat_names") = feats
     # Drop rows where target is null (e.g. delivery_days nulls for non-delivered)
     df_r = df.dropna(subset=[target]).copy()
     X = df_r[feats].fillna(df_r[feats].median())
