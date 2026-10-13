@@ -985,15 +985,15 @@ with tab10:
         # Classification report
         with st.expander("📋 Full Classification Report"):
             cr_txt = classification_report(
-                st.session_state.get("y_test_c"], r_cdive["y_pred"],
+                st.session_state.get("y_test_c"), r_cdive["y_pred"],
                 target_names=le_inv, zero_division=0)
             st.code(cr_txt, language="text")
 
         # ROC — only if model supports predict_proba and binary / OvR
         if "y_prob" in r_cdive and len(le_inv) == 2:
             section("📈 ROC Curve")
-            fpr, tpr, _ = roc_curve(st.session_state.get("y_test_c"], r_cdive["y_prob"][:, 1])
-            auc_val      = roc_auc_score(st.session_state.get("y_test_c"], r_cdive["y_prob"][:, 1])
+            fpr, tpr, _ = roc_curve(st.session_state.get("y_test_c"), r_cdive["y_prob"][:, 1])
+            auc_val      = roc_auc_score(st.session_state.get("y_test_c"), r_cdive["y_prob"][:, 1])
             fig_roc, ax_roc = plt.subplots(figsize=(5, 4))
             ax_roc.plot(fpr, tpr, color=CLR["primary"], lw=2,
                         label=f"AUC = {auc_val:.3f}")
