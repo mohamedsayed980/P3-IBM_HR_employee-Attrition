@@ -906,7 +906,7 @@ with tab10:
         else:
             for i, name in enumerate(sel_models_c):
                 status2.info(f"Training {name} …")
-                _, res, err = _train_one_cls(('name', CLS_MODELS[name],
+                _, res, err = _train_one_cls((name, CLS_MODELS[name],
                                               st.session_state.get["X_train_c"], st.session_state.get["X_test_c"],
                                               st.session_state.get["y_train_c"],  st.session_state.get["y_test_c"])
                 progress2.progress((i + 1) / len(sel_models_c),
