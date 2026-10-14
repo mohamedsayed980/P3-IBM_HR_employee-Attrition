@@ -681,7 +681,7 @@ with tab9:
         st.session_state.get("reg_results").update(results)
         st.session_state.get("reg_models").update({n: r["model"] for n, r in results.items()})
         best = max(results, key=lambda k: results[k]["r2"])
-        st.session_state.get("best_reg_name") = best
+        st.session_state.get("best_reg_name") == best
         update_stage2_insights()
         status.empty()
         progress.progress(1.0, text="✅ All models trained!")
