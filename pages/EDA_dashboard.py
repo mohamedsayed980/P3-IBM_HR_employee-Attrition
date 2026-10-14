@@ -136,7 +136,7 @@ with col_load:
 with st.container():
     col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
  
-    with col_load:
+with col_load:
         uploaded = st.file_uploader(
             "Load Dataset (.csv)", type=["csv"],
             key="file_uploader", label_visibility="collapsed")
