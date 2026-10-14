@@ -59,9 +59,7 @@ if st.session_state.df_raw is None and _full.exists():
 # =============================================================================
 with st.container():
         col_load, col_target, col_thresh, col_info = st.columns([3,2,2,3])
-
-with col_load:
-    #auto-loader code ✅
+   
 with col_target:
         if st.session_state.df_raw is not None:
             cols = st.session_state.df_raw.columns.tolist()
