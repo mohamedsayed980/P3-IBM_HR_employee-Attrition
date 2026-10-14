@@ -78,7 +78,7 @@ with col_thresh:
 
 with col_info:
             if st.session_state.df_raw is not None:
-            df = st.session_state.df_raw
+                df = st.session_state.df_raw
             st.markdown(f"""
             <div style="background:white;border-radius:8px;
                 padding:10px 14px;font-size:0.82rem;line-height:1.8;">
