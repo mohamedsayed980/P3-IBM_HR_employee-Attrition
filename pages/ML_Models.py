@@ -482,7 +482,7 @@ def update_stage2_insights():
                   f"Accuracy    : {r['acc']*100:.2f}%",
                   f"F1 Score    : {r['f1']:.4f}",
                   f"CV Acc mean : {r['cv_mean']*100:.2f}% ± {r['cv_std']*100:.2f}%"]
-    st.session_state.get("stage2_insights") = "\n".join(lines)
+    st.session_state.get("stage2_insights") == "\n".join(lines)
 
 # ── D16: fig → bytes ─────────────────────────────────────────────────────────
 def fig_to_bytes(fig) -> bytes:
