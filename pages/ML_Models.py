@@ -906,9 +906,12 @@ with tab10:
         else:
             for i, name in enumerate(sel_models_c):
                 status2.info(f"Training {name} …")
-                _, res, err = _train_one_cls((name, CLS_MODELS[name],
-                                              st.session_state.get["X_train_c"], st.session_state.get["X_test_c"],
-                                              st.session_state.get["y_train_c"],  st.session_state.get["y_test_c"])
+                _, res, err = _train_one_cls((name,
+                                              CLS_MODELS[name],
+                                              st.session_state.get["X_train_c"],
+                                              st.session_state.get["X_test_c"],
+                                              st.session_state.get["y_train_c"],
+                                              st.session_state.get["y_test_c"]))
                 progress2.progress((i + 1) / len(sel_models_c),
                                     text=f"✅ {name}")
                 if err:
@@ -919,7 +922,7 @@ with tab10:
         st.session_state.get("reg_results").update(results2)
         st.session_state.get["cls_models"].update({n: r["model"] for n, r in results2.items()})
         best_c = max(results2, key=lambda k: results2[k]["acc"])
-        st.session_state.get("best_cls_name") = best_c
+        st.session_state.get("best_cls_name") == best_c
         update_stage2_insights()
         status2.empty()
         progress2.progress(1.0, text="✅ All classifiers trained!")
@@ -1572,7 +1575,7 @@ with tab12:
                                 df_out["Confidence_%"] = \
                                     (probas.max(axis=1) * 100).round(2)
 
-                        st.session_state.get("batch_results") = df_out
+                        st.session_state.get("batch_results") == df_out
 
                     st.success("✅ Batch prediction complete!")
 
@@ -1853,9 +1856,9 @@ if S.get["final_report_text"]:
                  story.append(Paragraph(
                      "Final Insights & Recommendations", title_style))
                  story.append(Paragraph(
-                     f"ML Engine — End-to-End · "
+                     f"ML Engine — End-to-End · ",
                      f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}",
-                     stylest.session_state.get["Normal"])
+                     stylest.session_state.get["Normal"]))
                  story.append(HRFlowable(
                      width="100%", thickness=2,
                      color=colors.HexColor("#1E3A8A")))
@@ -1874,7 +1877,7 @@ if S.get["final_report_text"]:
                      ds_data.append(["Target", st.session_state.get["target_col"]])
                  if S.get("important_vars"):
                      ds_data.append(["Features selected",
-                         str(len(st.session_state.get("important_vars")))]
+                         str(len(st.session_state.get("important_vars")))] )
                  ds_tbl = Table(ds_data, colWidths=[2*inch, 4*inch])
                  ds_tbl.setStyle(TableStyle([
                      ("BACKGROUND", (0,0), (-1,0),
