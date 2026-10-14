@@ -126,18 +126,7 @@ with st.container():
  
 with st.container():
     col_load, col_target, col_thresh, col_info = st.columns([3, 2, 2, 3])
- 
-with col_load:
-        uploaded = st.file_uploader(
-            "Load Dataset (.csv)", type=["csv"],
-            key="file_uploader", label_visibility="collapsed")
-        if uploaded:
-            try:
-                _df = pd.read_csv(uploaded, sep=None, engine="python")
-                _register(_df, uploaded.name)
-                st.success(f"Loaded {uploaded.name} - {_df.shape[0]:,} rows x {_df.shape[1]} cols")
-            except Exception as e:
-                st.error(f"Error loading file: {e}")
+
        
 with col_target:
          if st.session_state.df_raw is not None:
