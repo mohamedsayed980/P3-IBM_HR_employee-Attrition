@@ -611,8 +611,8 @@ with tab9:
     with col_clr:
         if st.button("🗑️ Clear Results", use_container_width=True,
                      key="clr_r_btn"):
-            st.session_state.get("reg_results") = {}
-            st.session_state.get("reg_models")  = {}
+            st.session_state.get("reg_results") == {}
+            st.session_state.get("reg_models")  == {}
             st.rerun()
 #--------------------------------------------------------------------
 # ── CPU sidebar display ──────────────────────────────────────────────────
