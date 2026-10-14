@@ -77,7 +77,6 @@ with col_thresh:
     st.session_state.corr_threshold = thresh
 
 with col_info:
-            # ← THIS must exist!
             if st.session_state.df_raw is not None:
             df = st.session_state.df_raw
             st.markdown(f"""
