@@ -1831,7 +1831,7 @@ with tab13:
  # TAB 13 — DISPLAY + EXPORT  (replace your existing display/export block)
  # Same professional format as Tab 11
  # ─────────────────────────────────────────────────────────────────────────────
-
+S = st.session_state
  # ── Display ───────────────────────────────────────────────────────────────────
 if S.get["final_report_text"]:
      st.text_area("📋 Final Report",
