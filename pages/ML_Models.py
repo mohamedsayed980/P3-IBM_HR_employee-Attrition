@@ -504,15 +504,15 @@ def update_stage2_insights():
                   f"MAE         : {r['mae']:,.0f}",
                   f"RMSE        : {r['rmse']:,.0f}",
                   f"CV R² mean  : {r['cv_mean']:.4f} ± {r['cv_std']:.4f}"]
-    if st.session_state.get("reg_results"):
-        best = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
-        r    = st.session_state.get("reg_results")[best]
+    if st.session_state("reg_results"):
+        best = max(st.session_state("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
+        r    = st.session_state("reg_results")[best]
         lines += ["", "── CLASSIFICATION ──",
                   f"Best Model  : {best}",
                   f"Accuracy    : {r['acc']*100:.2f}%",
                   f"F1 Score    : {r['f1']:.4f}",
                   f"CV Acc mean : {r['cv_mean']*100:.2f}% ± {r['cv_std']*100:.2f}%"]
-    st.session_state.get("stage2_insights") == "\n".join(lines)
+    st.session_state("stage2_insights") == "\n".join(lines)
 
 # ── D16: fig → bytes ─────────────────────────────────────────────────────────
 def fig_to_bytes(fig) -> bytes:
