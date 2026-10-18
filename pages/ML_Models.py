@@ -248,7 +248,7 @@ def section(title: str):
 def load_data() -> pd.DataFrame | None:
     """Returns cleaned dataframe — from session_state (Stage 1 or upload)."""
     # Try Stage 1 key first, then Stage 2 upload key
-    df = S.get["df_work"]
+    df = S["df_work"]
     if df is None:
         df = S.get("df_clean")
     if df is not None and not isinstance(df, pd.DataFrame):
@@ -1545,7 +1545,7 @@ with tab12:
                 if "_last_pred_cat" in S and have_cls:
                     with res_c2:
                         cat  = st.session_state["_last_pred_cat"]
-                        conf = S.get["_last_pred_conf"]
+                        conf = S["_last_pred_conf"]
                         badge_cls, icon = CAT_STYLE.get(cat, ("badge-purple","⬜"))
                         st.markdown(f"""
                         <div class="pred-card">
@@ -1731,12 +1731,12 @@ with tab13:
         lines.append("")
         lines.append("1. DATASET SUMMARY")
         lines.append("─" * 45)
-        if S.get["file_name"]:
+        if S["file_name"]:
             lines.append(f"   File    : {S.get('file_name', 'N/A')}")
-        if S.get["df_work"] is not None:
+        if S["df_work"] is not None:
             df_w = st.session_state["df_work"]
             lines.append(f"   Shape   : {df_w.shape[0]:,} rows × {df_w.shape[1]} columns")
-        if S.get["target_col"]:
+        if S["target_col"]:
             lines.append(f"   Target  : {S['target_col']}")
         if S.get("important_vars"):
             lines.append(f"   Features selected : {len(S['important_vars'])}")
@@ -1785,7 +1785,7 @@ with tab13:
         lines.append("")
         lines.append("4. CLASSIFICATION MODEL RESULTS  (Stage 2)")
         lines.append("─" * 45)
-        if S.get["cls_results"]:
+        if S["cls_results"]:
             sorted_cls = sorted(st.session_state.get("reg_results").items(),
                                 key=lambda x: x[1]["acc"], reverse=True)
             for rank, (name, r) in enumerate(sorted_cls, 1):
@@ -1815,7 +1815,7 @@ with tab13:
         if S.get("reg_results"):
             best_r = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["r2"])
             lines.append(f"   • Use {best_r} for regression tasks")
-        if S.get["cls_results"]:
+        if S["cls_results"]:
             best_c = max(st.session_state.get("reg_results"), key=lambda k: st.session_state.get("reg_results")[k]["acc"])
             lines.append(f"   • Use {best_c} for classification tasks")
         lines.append("   • Run Predict New Data (Tab 12) for inference")
@@ -1908,13 +1908,13 @@ if S["final_report_text"]:
                  # ── Section 1: Dataset Summary ────────────────────────────
                  story.append(Paragraph("1. Dataset Summary", h2_style))
                  ds_data = [["Item", "Value"]]
-                 if S.get["file_name"]:
+                 if S["file_name"]:
                      ds_data.append(["File", st.session_state["file_name"]])
-                 if S.get["df_work"] is not None:
+                 if S["df_work"] is not None:
                      df_w = st.session_state["df_work"]
                      ds_data.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
-                 if S.get["target_col"]:
+                 if S["target_col"]:
                      ds_data.append(["Target", st.session_state["target_col"]])
                  if S.get("important_vars"):
                      ds_data.append(["Features selected",
@@ -1994,7 +1994,7 @@ if S["final_report_text"]:
                  # ── Section 4: Classification Results ─────────────────────
                  story.append(Paragraph(
                      "4. Classification Model Results (Stage 2)", h2_style))
-                 if S.get["cls_results"]:
+                 if S["cls_results"]:
                      c_data = [["Model", "Accuracy", "F1",
                                 "Precision", "Recall", "CV Acc"]]
                      sorted_cls = sorted(
@@ -2047,7 +2047,7 @@ if S["final_report_text"]:
                      best_r = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"• Use {best_r} for regression tasks")
-                 if S.get["cls_results"]:
+                 if S["cls_results"]:
                      best_c = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"• Use {best_c} for classification tasks")
@@ -2108,13 +2108,13 @@ if S["final_report_text"]:
                  # ── Dataset Summary ───────────────────────────────────────
                  wd_doc.add_heading("1. Dataset Summary", 1)
                  ds_rows = []
-                 if S.get["file_name"]:
+                 if S["file_name"]:
                      ds_rows.append(["File", st.session_state["file_name"]])
-                 if S.get["df_work"] is not None:
+                 if S["df_work"] is not None:
                      df_w = st.session_state["df_work"]
                      ds_rows.append(["Shape",
                          f"{df_w.shape[0]:,} rows × {df_w.shape[1]} cols"])
-                 if S.get["target_col"]:
+                 if S["target_col"]:
                      ds_rows.append(["Target", st.session_state["target_col"]])
                  if S.get("important_vars"):
                      ds_rows.append(["Features selected",
@@ -2164,7 +2164,7 @@ if S["final_report_text"]:
                  # ── Classification Results ────────────────────────────────
                  wd_doc.add_heading(
                      "4. Classification Model Results (Stage 2)", 1)
-                 if S.get["cls_results"]:
+                 if S["cls_results"]:
                      sorted_cls = sorted(
                          st.session_state.get("reg_results").items(),
                          key=lambda x: x[1]["acc"], reverse=True)
@@ -2198,7 +2198,7 @@ if S["final_report_text"]:
                      best_r = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["r2"])
                      recs.append(f"Use {best_r} for regression tasks")
-                 if S.get["cls_results"]:
+                 if S["cls_results"]:
                      best_c = max(st.session_state.get("reg_results"),
                                   key=lambda k: st.session_state.get("reg_results")[k]["acc"])
                      recs.append(f"Use {best_c} for classification tasks")
