@@ -40,7 +40,7 @@ for _k, _v in {
 
 }.items():
     if _k not in st.session_state:
-        st.session_state[_k] == _v
+        st.session_state[_k] = _v
 # =============================================================================
 # F — FILE LOADER  (auto-load from data/ folder, upload as fallback)
 # =============================================================================
